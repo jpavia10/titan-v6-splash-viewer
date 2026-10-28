@@ -1,87 +1,146 @@
 <!doctype html><html lang="en" data-atmo="obsidian"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TITAN RELIQUARY — live intro (preview)</title>
 <style>
-html,body{margin:0;height:100%;background:#000;color:#eef;font:500 14px system-ui,sans-serif;overflow:hidden;touch-action:none}
-
-#go{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#000;cursor:pointer}
-#go b{font:300 13px/1 system-ui;letter-spacing:.5em;opacity:.7;animation:p 2s infinite}@keyframes p{50%{opacity:.25}}
-#title{position:fixed;left:0;right:0;top:58%;z-index:5;text-align:center;pointer-events:none;opacity:0;transition:opacity 2.2s,letter-spacing 4s;letter-spacing:.6em;
- font:200 clamp(20px,5.6vw,56px)/1 "Optima","Futura",system-ui;color:#f3efe6;text-shadow:0 0 14px rgba(140,100,230,.55),0 0 50px rgba(60,30,120,.5)}
-#title.on{opacity:1;letter-spacing:.22em;white-space:nowrap}
-#scene{position:fixed;inset:0;z-index:3;pointer-events:none;perspective:900px;display:grid;place-items:center}
-.coin-thumb{width:min(38vw,200px);height:min(38vw,200px);transform-style:preserve-3d;opacity:0;margin-top:-22vh;transition:opacity 1.2s}
-.coin-thumb img{width:100%;height:100%;border-radius:50%;display:block;filter:drop-shadow(0 0 22px rgba(130,90,220,.35)) drop-shadow(0 0 6px rgba(255,200,120,.25))}
-#flash{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff,rgba(90,60,170,.45) 25%,transparent 65%)}
+html,body{margin:0;height:100%;background:#050506;color:#eee;font:500 14px system-ui,sans-serif;overflow:hidden;touch-action:none}
+canvas{position:fixed;inset:0;width:100%!important;height:100%!important;display:block}
+#go{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#050506;cursor:pointer}
+#go b{font:300 13px/1 system-ui;letter-spacing:.5em;color:#c9a35a;opacity:.75;animation:p 2s infinite}@keyframes p{50%{opacity:.25}}
+#title{position:fixed;left:0;right:0;top:76%;z-index:5;text-align:center;pointer-events:none;opacity:0;transition:opacity 2.2s,letter-spacing 4s;letter-spacing:.6em;white-space:nowrap;
+ font:300 clamp(18px,5.4vw,52px)/1 "Optima","Futura",system-ui;color:#f5d48a;text-shadow:0 0 18px rgba(245,184,46,.35)}
+#title.on{opacity:1;letter-spacing:.22em}
 #ui{position:fixed;left:0;right:0;bottom:0;z-index:7;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.7))}
-#ui button{border:1px solid rgba(255,255,255,.25);background:rgba(20,20,30,.6);color:#fff;border-radius:999px;padding:8px 12px;font:inherit}
-#ui button[aria-pressed=true]{background:#fff;color:#000}
-#stat{position:fixed;top:calc(8px + env(safe-area-inset-top));right:10px;z-index:7;font:11px ui-monospace,monospace;opacity:.6;text-align:right}
-</style></head><body>
+#ui button{border:1px solid rgba(245,184,46,.3);background:rgba(12,10,8,.7);color:#eadfc8;border-radius:999px;padding:8px 12px;font:inherit}
+#ui button[aria-pressed=true]{background:#f5b82e;color:#000}
+#stat{position:fixed;top:calc(8px + env(safe-area-inset-top));right:10px;z-index:7;font:11px ui-monospace,monospace;opacity:.5;text-align:right;color:#cbb}
+</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head><body>
 <div id="go"><b>TAP TO IGNITE · SOUND ON</b></div>
-<div id="scene"><div class="coin-thumb" id="coin"><img alt="" id="coinimg"></div></div>
-<div id="title">TITAN RELIQUARY</div><div id="flash"></div><div id="stat"></div>
-<nav id="ui"></nav>
-<script src="fx/kit.js?v=l2"></script><script src="fx/atmos.js?v=l2"></script><script src="fx/particles-gpu.js?v=l2"></script><script src="fx/volume.js?v=l2"></script><script src="fx/post.js?v=l2"></script>
-<script>
-(function(){
-var K=TitanFXK, $=function(i){return document.getElementById(i)};
-/* coin: generated gold medal (vector, no collection photo) */
-$("coinimg").src="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="g" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff6d0"/><stop offset=".35" stop-color="#e8b64a"/><stop offset=".8" stop-color="#7a4f12"/><stop offset="1" stop-color="#3a2405"/></radialGradient></defs><circle cx="100" cy="100" r="98" fill="url(#g)"/><circle cx="100" cy="100" r="86" fill="none" stroke="#fde7a0" stroke-width="2" stroke-dasharray="2 4"/><circle cx="100" cy="100" r="78" fill="none" stroke="#5c3a0a" stroke-width="1.5"/><path d="M100 38l12 40h-24zM70 82h60l-8 70H78z" fill="#5c3a0a" opacity=".75"/><text x="100" y="178" font-family="Georgia" font-size="13" text-anchor="middle" fill="#4a2e08" letter-spacing="3">RELIQUARY</text></svg>');
-/* OBSIDIAN = black volcanic glass: near-black void, knapped glass shards with thin violet edge glints, indigo aurora seams, low cavern haze. No grid, no cyan. Heavy layers only on high tiers. */
-var TIERS=["low","medium","high","ultra","max"], mob=Math.min(screen.width,screen.height)<820||/Android|iPhone|iPad/i.test(navigator.userAgent);
-try{if(!/[?&]tier=/.test(location.search)&&localStorage.getItem("tr_gl_v")!=="2"){localStorage.removeItem("tr_fxk_tier");localStorage.setItem("tr_gl_v","2")}}catch(e){}
-var cur=K.tier()||(mob?"medium":"high"); try{if(!K.tier())localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
-var lvl=TIERS.indexOf(cur), stack=[
- {mod:"atmos",top:[.012,.008,.022],bottom:[.002,.001,.004],portal:.05,portalC:[.32,.12,.7],portalAt:[.5,.62],aurora:.12,auroraC:[.28,.14,.62],grid:0,horizon:.3,fog:lvl>0?.1:.06,fogC:[.07,.04,.12],vig:.75,grain:.015,touchGlow:.4,touchC:[.55,.35,.95]}];
-if(lvl>=2) stack.push({mod:"volume",steps:lvl>=3?36:22,density:.1,color:[.12,.08,.2],light:[.45,.25,.85],lightAt:[.5,.62],follow:true,lightPow:.7,ambient:[.004,.002,.01],low:.5});
-/* glass shards: dark smoky violet bodies catching a thin cool-white glint */
-stack.push({mod:"particles",count:1,curl:.9,scale:2.4,speed:.035,life:.03,size:lvl<2?2.4:3,shape:"spark",c1:[.78,.72,.95],c2:[.1,.06,.18],alpha:.5,blend:"add",glint:1.2,depth:.9,rake:1,shock:1.7,swirl:.3,spawn:"any",obstacles:true});
-/* indigo obsidian dust */
-stack.push({mod:"particles",count:lvl<2?.6:1,curl:1.4,scale:3,speed:.02,life:.05,size:1.1,shape:"mote",c1:[.34,.2,.7],c2:[.12,.06,.3],alpha:.2,blend:"add",rake:1.2,shock:1,swirl:1,obstacles:true});
-/* rare restrained gold embers from the coin (high+) */
-if(lvl>=2) stack.push({mod:"particles",count:.25,curl:.8,scale:1.8,speed:.03,drift:[0,.01],life:.07,size:1.4,shape:"streak",c1:[.95,.7,.3],c2:[.4,.15,.5],alpha:.22,blend:"add",rake:1,shock:1.2,swirl:-.6,obstacles:true});
-stack.push({mod:"post",bloom:lvl<1?.4:lvl<2?.6:.8,threshold:.78,exposure:.9,aberr:lvl>=3?.25:0,grain:.02,vig:.55,trails:lvl>=2?.35:0});
-K.themes.obsidian={stack:stack};
-var ui=$("ui");
-var TIERS=["low","medium","high","ultra","max"], ui=$("ui"); var cur=K.tier()||((Math.min(screen.width,screen.height)<820)?"high":"ultra");
-if(!K.tier()) try{localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
-TIERS.forEach(function(t){var b=document.createElement("button");b.textContent=t[0].toUpperCase()+t.slice(1);b.setAttribute("aria-pressed",t===cur);b.onclick=function(){try{localStorage.setItem("tr_fxk_tier",t)}catch(e){}location.search="?tier="+t};ui.appendChild(b)});
-var chill=document.createElement("button");chill.textContent="Chill realm";chill.onclick=function(){mode=mode==="chill"?"intro":"chill";chill.setAttribute("aria-pressed",mode==="chill");if(mode==="intro")run()};ui.appendChild(chill);
-var re=document.createElement("button");re.textContent="Replay boom";re.onclick=function(){run()};ui.appendChild(re);
-/* ---------- audio: everything goes through an analyser; the analyser's bass drives the particles (sound -> physics) ---------- */
-var AC,bus,an,couple,mode="intro",T0=0,pad;
-function noiseBuf(s){var b=AC.createBuffer(1,AC.sampleRate*s,AC.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b}
-function impulse(){var n=AC.sampleRate*3.5,b=AC.createBuffer(2,n,AC.sampleRate);for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.2)}return b}
-function setup(){AC=new (window.AudioContext||webkitAudioContext)();an=AC.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.35;
- var comp=AC.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;comp.attack.value=.01;comp.release.value=.25;
- bus=AC.createGain();var rv=AC.createConvolver();rv.buffer=impulse();var wet=AC.createGain();wet.gain.value=.32;
- bus.connect(comp);bus.connect(rv);rv.connect(wet);wet.connect(comp);comp.connect(an);an.connect(AC.destination);
- couple=K.audioCouple(an,{hz:110,onHit:function(p){K.shock(.5,.62,p);kick(p)}});}
-/* theatrical boom: sub drop + body thump + filtered noise crack + glass shimmer tail (synthesised, no music, no trademark chord) */
-function boom(t,g){g=g||1;var o=AC.createOscillator(),og=AC.createGain();o.type="sine";o.frequency.setValueAtTime(62,t);o.frequency.exponentialRampToValueAtTime(24,t+2.8);
- og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(1.1*g,t+.02);og.gain.exponentialRampToValueAtTime(.001,t+4.2);o.connect(og);og.connect(bus);o.start(t);o.stop(t+4.3);
- var o2=AC.createOscillator(),g2=AC.createGain();o2.type="triangle";o2.frequency.setValueAtTime(140,t);o2.frequency.exponentialRampToValueAtTime(40,t+.35);g2.gain.setValueAtTime(.8*g,t);g2.gain.exponentialRampToValueAtTime(.001,t+.6);o2.connect(g2);g2.connect(bus);o2.start(t);o2.stop(t+.7);
- var n=AC.createBufferSource();n.buffer=noiseBuf(3);var f=AC.createBiquadFilter();f.type="lowpass";f.frequency.setValueAtTime(5000,t);f.frequency.exponentialRampToValueAtTime(180,t+1.6);var ng=AC.createGain();ng.gain.setValueAtTime(.55*g,t);ng.gain.exponentialRampToValueAtTime(.001,t+2.4);n.connect(f);f.connect(ng);ng.connect(bus);n.start(t);
- for(var i=0;i<14;i++){var s=AC.createOscillator(),sg=AC.createGain(),st=t+.15+Math.random()*1.8;s.type="sine";s.frequency.value=2400+Math.random()*5200;sg.gain.setValueAtTime(0,st);sg.gain.linearRampToValueAtTime(.025*g,st+.005);sg.gain.exponentialRampToValueAtTime(.0001,st+.4+Math.random());s.connect(sg);sg.connect(bus);s.start(st);s.stop(st+1.6)}}
-function riser(t,d){var n=AC.createBufferSource();n.buffer=noiseBuf(d);var f=AC.createBiquadFilter();f.type="bandpass";f.Q.value=6;f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(6000,t+d);
- var g=AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.35,t+d-.05);g.gain.linearRampToValueAtTime(0,t+d);n.connect(f);f.connect(g);g.connect(bus);n.start(t);
- var o=AC.createOscillator(),og=AC.createGain();o.frequency.setValueAtTime(30,t);o.frequency.linearRampToValueAtTime(55,t+d);og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(.35,t+d);og.gain.setValueAtTime(0,t+d);o.connect(og);og.connect(bus);o.start(t);o.stop(t+d+.05)}
-function padOn(){if(pad)return;pad=AC.createGain();pad.gain.value=0;pad.connect(bus);[55,82.4,110.2,164.8].forEach(function(fq,i){var o=AC.createOscillator(),l=AC.createOscillator(),lg=AC.createGain(),f=AC.createBiquadFilter();o.type="sawtooth";o.frequency.value=fq;o.detune.value=(i-1.5)*7;f.type="lowpass";f.frequency.value=420;l.frequency.value=.05+i*.03;lg.gain.value=260;l.connect(lg);lg.connect(f.frequency);o.connect(f);f.connect(pad);o.start();l.start()});pad.gain.linearRampToValueAtTime(.05,AC.currentTime+6)}
-/* visual kick on audio hit */
-var hue=0,hueV=0,spin=0,spinV=0,lift=0;
-function kick(p){hueV+=60*p;spinV+=900*p;$("flash").animate([{opacity:0},{opacity:Math.min(1,.45*p)},{opacity:0}],{duration:900,easing:"ease-out"})}
-function run(){if(!AC)return;mode="intro";chill.setAttribute("aria-pressed",false);var t=AC.currentTime+.1;T0=t;$("title").classList.remove("on");$("coin").style.opacity=0;
- riser(t,3.6);boom(t+3.6,1.25);setTimeout(function(){$("coin").style.opacity=1},3500);setTimeout(function(){$("title").classList.add("on")},4600);
- setTimeout(function(){if(mode==="intro"){padOn()}},6000)}
-/* chill realm: slow sub heartbeats every ~7 s gently shove the field; pad keeps playing */
-var beat=0;
-K.onFrame=function(dt){var e=couple?couple(dt):0;
- if(AC&&(mode==="chill"||AC.currentTime-T0>9)){beat-=dt;if(beat<=0){beat=6+Math.random()*3;padOn();boom(AC.currentTime+.02,.35)}}
- hueV*=Math.exp(-dt*1.5);hue+=dt*(8+hueV)+K.bass*30*dt;spinV*=Math.exp(-dt*.9);spin+=dt*(25+spinV);lift+=dt;
-  $("coin").style.transform="translateY("+(Math.sin(lift*.7)*8-K.bass*20)+"px) rotateY("+spin+"deg) rotateX("+(14*Math.sin(lift*.4))+"deg) scale("+(1+K.bass*.25)+")";
- var d=K.debug();$("stat").textContent=cur.toUpperCase()+" · "+d.w+"×"+d.h+" · "+(d.parts||[]).join(" ")+" · bass "+(K.bass).toFixed(2)};
-/* touch = shock at your finger + small boom (UI fires K.shock directly) */
-addEventListener("pointerdown",function(e){if(!AC||e.target.closest("#ui"))return;var x=e.clientX/innerWidth,y=1-e.clientY/innerHeight;K.shock(x,y,1.2);boom(AC.currentTime+.01,.5)});
-$("go").onclick=function(){setup();AC.resume();$("go").remove();run()};
-})();
+<div id="title">TITAN RELIQUARY</div><div id="stat"></div><nav id="ui"></nav>
+<script type="module">
+/* OBSIDIAN live: three.js MeshPhysicalMaterial knapped black-glass point (obsidian-point.bin, studio.hdr), amber underglow on a dark slate floor,
+   instanced glass chips (CPU physics) + sparse GPU ash accents. Bass (AnalyserNode <110 Hz) -> K.audioCouple -> K.shock -> debris shove. */
+import * as THREE from 'three';
+import {ConvexGeometry} from 'three/addons/geometries/ConvexGeometry.js';
+import {RGBELoader} from 'three/addons/loaders/RGBELoader.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const $=i=>document.getElementById(i), R=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(2024);
+/* ---- tiers (same names/storage as TitanFXK). Phone default LOW; tr_gl_v=3 clears stale Medium/High picks once ---- */
+const TIERS={low:{ash:12000,chips:90,rs:.45,dpr:1.5,bloom:0,shadow:0,cap:33},medium:{ash:40000,chips:160,rs:.55,dpr:1.5,bloom:.12,shadow:0,cap:16},
+ high:{ash:120000,chips:220,rs:.8,dpr:2,bloom:.18,shadow:1,cap:0},ultra:{ash:250000,chips:300,rs:1,dpr:2,bloom:.2,shadow:1,cap:0},max:{ash:600000,chips:400,rs:1,dpr:2.5,bloom:.22,shadow:1,cap:0}};
+const mob=Math.min(screen.width,screen.height)<820||/Android|iPhone|iPad/i.test(navigator.userAgent);
+try{if(!/[?&]tier=/.test(location.search)&&localStorage.getItem("tr_gl_v")!=="3"){localStorage.removeItem("tr_fxk_tier");localStorage.setItem("tr_gl_v","3")}}catch(e){}
+const qt=(/[?&]tier=(\w+)/.exec(location.search)||[])[1];let cur=TIERS[qt]?qt:null;try{if(!cur&&TIERS[localStorage.getItem("tr_fxk_tier")])cur=localStorage.getItem("tr_fxk_tier")}catch(e){}
+cur=cur||(mob?"low":"high");try{localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
+const TQ=TIERS[cur];
+/* ---- K: TitanFXK-compatible shock + audioCouple ---- */
+const K=window.TitanFXK=window.TitanFXK||{};K.bass=0;K.shk=new Float32Array(24);
+K.shock=(x,y,p)=>{let j=0,m=9;for(let i=0;i<6;i++)if(K.shk[i*4+2]<m){m=K.shk[i*4+2];j=i}K.shk.set([x,y,p==null?1:p,0],j*4);onShock(x,y,p==null?1:p)};
+K.audioCouple=(an,opt={})=>{const buf=new Uint8Array(an.frequencyBinCount),hz=an.context.sampleRate/an.fftSize,top=Math.max(2,Math.round((opt.hz||120)/hz));let avg=0,cool=0;
+ return dt=>{an.getByteFrequencyData(buf);let e=0;for(let i=1;i<=top;i++)e+=buf[i];e=e/top/255;K.bass=K.bass*.6+e*.4;cool-=dt;
+  if(e>avg*1.45+.18&&cool<=0){cool=.35;(opt.onHit||(p=>K.shock(.5,.5,p)))(Math.min(2.5,e*2.2))}avg=avg*.95+e*.05;return e}};
+/* ---- renderer ---- */
+const renderer=new THREE.WebGLRenderer({antialias:cur!=="low",powerPreference:'high-performance'});
+const DPR=Math.min(devicePixelRatio||1,TQ.dpr)*TQ.rs;renderer.setPixelRatio(DPR);renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+renderer.shadowMap.enabled=!!TQ.shadow;document.body.prepend(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x050506);scene.fog=new THREE.Fog(0x050506,7,16);
+const cam=new THREE.PerspectiveCamera(36,1,.05,100);
+new RGBELoader().load('studio.hdr',t=>{t.mapping=THREE.EquirectangularReflectionMapping;const pm=new THREE.PMREMGenerator(renderer);scene.environment=pm.fromEquirectangular(t).texture;t.dispose();pm.dispose()});
+/* lights: cool key for the rim, warm amber from below (the underglow) */
+const key=new THREE.DirectionalLight(0xdfe6ff,1.6);key.position.set(-2,3,2);key.castShadow=!!TQ.shadow;scene.add(key);
+const rim=new THREE.DirectionalLight(0xfff4e6,3);rim.position.set(2.5,1.5,-2.5);scene.add(rim);
+const under=new THREE.PointLight(0xff9a3a,6,5,1.6);under.position.set(0,-1.3,.6);scene.add(under);
+/* glass */
+const mat=new THREE.MeshPhysicalMaterial({color:0x050405,roughness:.04,metalness:0,ior:1.5,specularIntensity:1,clearcoat:1,clearcoatRoughness:0,envMapIntensity:1.7,emissive:0xff7a2a,emissiveIntensity:0});
+mat.onBeforeCompile=s=>{s.uniforms.glow={value:.25};mat.userData.s=s;
+ s.vertexShader='attribute float thin;varying float vThin;\n'+s.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvThin=thin;');
+ s.fragmentShader='uniform float glow;varying float vThin;\n'+s.fragmentShader.replace('vec3 totalEmissiveRadiance = emissive;',
+  'vec3 totalEmissiveRadiance = vec3(1.,.5,.14)*glow*(vThin+.15)*pow(1.-abs(dot(normalize(vNormal),normalize(vViewPosition))),3.);')};
+const hero=new THREE.Mesh(new THREE.BufferGeometry(),mat);hero.castShadow=!!TQ.shadow;
+fetch('obsidian-point.bin').then(r=>r.arrayBuffer()).then(buf=>{const hd=new Uint32Array(buf,0,2),nv=hd[0],nf=hd[1];
+ const q=new Int16Array(buf,8,nv*3),pos=new Float32Array(nv*3);for(let i=0;i<nv*3;i++)pos[i]=q[i]/32767*1.6;
+ const off=8+nv*6,idx=new Uint32Array(buf.slice(off,off+nf*12));const g=new THREE.BufferGeometry();
+ g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setIndex(new THREE.BufferAttribute(idx,1));g.computeVertexNormals();
+ const thin=new Float32Array(nv);for(let i=0;i<nv;i++){const x=pos[i*3],y=pos[i*3+1],z=pos[i*3+2],u=y/1.5,pr=Math.max(Math.pow(Math.max(0,1-Math.abs(u)),.55)*(u>0?Math.pow(Math.max(0,1-u),.35):1),1e-3);
+  thin[i]=Math.min(1,Math.max(0,.013-Math.abs(z))*77*Math.min(1,Math.abs(x)/(.62*pr)+.3))}
+ g.setAttribute('thin',new THREE.BufferAttribute(thin,1));hero.geometry=g;});
+const rig=new THREE.Group();rig.add(hero);scene.add(rig);
+/* floor + amber underglow pool */
+const FY=-1.47;
+const floor=new THREE.Mesh(new THREE.CircleGeometry(9,64),new THREE.MeshPhysicalMaterial({color:0x1c1b1e,roughness:.62,clearcoat:.3,clearcoatRoughness:.3,envMapIntensity:.2}));
+floor.rotation.x=-Math.PI/2;floor.position.y=FY;floor.receiveShadow=!!TQ.shadow;scene.add(floor);
+const glowT=(()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d'),gr=g.createRadialGradient(128,128,4,128,128,128);
+ gr.addColorStop(0,'rgba(255,170,70,.9)');gr.addColorStop(.25,'rgba(230,120,30,.45)');gr.addColorStop(.6,'rgba(120,50,10,.12)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,256,256);return new THREE.CanvasTexture(c)})();
+const pool=new THREE.Mesh(new THREE.PlaneGeometry(3.4,3.4),new THREE.MeshBasicMaterial({map:glowT,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
+pool.rotation.x=-Math.PI/2;pool.position.y=FY+.003;scene.add(pool);
+/* chips: instanced black-glass flakes, resting on the floor then shoved by every shock */
+const chipGeo=(()=>{const ps=[];for(let k=0;k<12;k++)ps.push(new THREE.Vector3((R()-.5),(R()-.5)*.25,(R()-.5)*.7));let g=new ConvexGeometry(ps);g.computeVertexNormals();return g})();
+const chipMat=new THREE.MeshPhysicalMaterial({color:0x060506,roughness:.06,clearcoat:1,envMapIntensity:1.1});
+const NC=TQ.chips,chips=new THREE.InstancedMesh(chipGeo,chipMat,NC);chips.castShadow=!!TQ.shadow;scene.add(chips);
+const C=[];for(let i=0;i<NC;i++){const a=R()*6.283,r=.35+R()*R()*1.6,sc=.06+R()*R()*.14;C.push({p0:new THREE.Vector3(Math.cos(a)*r,FY+sc*.1,Math.sin(a)*r*.8-.2),p:new THREE.Vector3(),v:new THREE.Vector3(),e:new THREE.Euler(R()*.3,R()*6,R()*.3),w:new THREE.Vector3(),sc})}
+C.forEach(c=>c.p.copy(c.p0));
+/* ash: sparse GPU accents. Positions analytic in the vertex shader: drift + per-shock radial shove that settles back (no readback) */
+const NA=TQ.ash,ap=new Float32Array(NA*3),as=new Float32Array(NA);
+for(let i=0;i<NA;i++){const a=R()*6.283,r=Math.sqrt(R())*3.2;ap[i*3]=Math.cos(a)*r;ap[i*3+1]=FY+.02+Math.pow(R(),3)*3.4;ap[i*3+2]=Math.sin(a)*r*.8-.4;as[i]=R()}
+const ag=new THREE.BufferGeometry();ag.setAttribute('position',new THREE.BufferAttribute(ap,3));ag.setAttribute('seed',new THREE.BufferAttribute(as,1));
+const SH=[];for(let i=0;i<6;i++)SH.push(new THREE.Vector4(0,0,0,99));
+const ashMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{t:{value:0},sh:{value:SH},px:{value:DPR},bass:{value:0}},
+ vertexShader:`uniform float t,px,bass;uniform vec4 sh[6];attribute float seed;varying float vA,vW;
+ void main(){vec3 p=position;float s=seed*6.283;p+=vec3(sin(t*.11+s)*.25,mod(t*.03*(.3+seed),3.4)*0.+sin(t*.2+s*2.)*.08,cos(t*.09+s)*.25);
+  float kick=0.;for(int i=0;i<6;i++){vec3 o=sh[i].xyz;float age=sh[i].w,P=o.y;if(age>8.)continue;vec3 d=p-vec3(o.x,-.2,o.z);float r=length(d)+.15;
+   float f=P*(1.-exp(-age*6.))*exp(-age*.9)/(r*r+.3);p+=normalize(d)*f*.9+vec3(0,f*.6,0);kick+=f;}
+  vA=.35+.65*fract(seed*7.3);vW=clamp(kick*.6+bass*.3,0.,1.);vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;gl_PointSize=(1.2+2.2*fract(seed*13.1))*px*2./-mv.z;}`,
+ fragmentShader:`varying float vA,vW;void main(){vec2 c=gl_PointCoord-.5;float d=dot(c,c);if(d>.25)discard;float a=(1.-d*4.)*vA;
+  vec3 col=mix(vec3(.05,.045,.045),vec3(1.,.55,.18),.25+vW*.5);gl_FragColor=vec4(col,a*(.35+vW*.4));}`});
+const ash=new THREE.Points(ag,ashMat);scene.add(ash);
+/* post: bloom only on medium+ (very light) */
+let comp=null;if(TQ.bloom){comp=new EffectComposer(renderer);comp.addPass(new RenderPass(scene,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(256,256),TQ.bloom,.4,1.6));comp.addPass(new OutputPass())}
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);comp&&comp.setSize(w,h);cam.aspect=w/h;const port=h>w;cam.fov=port?44:30;cam.position.set(0,port?.55:.4,port?6.4:5.4);cam.lookAt(0,-.35,0);cam.updateProjectionMatrix()}
+addEventListener('resize',resize);resize();
+/* shocks: map screen uv to the floor plane around the hero */
+let punch=0,glowK=0;
+function onShock(x,y,p){const wx=(x-.5)*3,wz=(.5-y)*1.5;for(let i=0;i<6;i++)if(SH[i].w>7){SH[i].set(wx,p,wz,0);break}else if(i===5){SH[0].set(wx,p,wz,0)}
+ const O=new THREE.Vector3(wx,FY,wz);for(const c of C){const d=c.p.clone().sub(O);const r=Math.max(.25,d.length());d.y=Math.abs(d.y)+.6;d.normalize();const k=p*3.2/(r*r+.4)*(.6+Math.random()*.8);
+  c.v.addScaledVector(d,k);c.w.set((Math.random()-.5)*20*p,(Math.random()-.5)*20*p,(Math.random()-.5)*20*p)}punch=Math.min(1.5,punch+p*.5);glowK=Math.min(2.5,glowK+p)}
+/* ---- audio (synthesised boom; no music, no Deep Note/THX chord) ---- */
+let AC,bus,couple,mode="intro",T0=0,pad;
+const noiseBuf=s=>{const b=AC.createBuffer(1,AC.sampleRate*s,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b};
+function setup(){AC=new (window.AudioContext||webkitAudioContext)();const an=AC.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.35;
+ const cp=AC.createDynamicsCompressor();cp.threshold.value=-14;cp.ratio.value=4;bus=AC.createGain();const rv=AC.createConvolver();
+ const n=AC.sampleRate*3,b=AC.createBuffer(2,n,AC.sampleRate);for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.2)}rv.buffer=b;
+ const wet=AC.createGain();wet.gain.value=.3;bus.connect(cp);bus.connect(rv);rv.connect(wet);wet.connect(cp);cp.connect(an);an.connect(AC.destination);
+ couple=K.audioCouple(an,{hz:110,onHit:p=>K.shock(.5,.62,p)})}
+function boom(t,g=1){const o=AC.createOscillator(),og=AC.createGain();o.frequency.setValueAtTime(62,t);o.frequency.exponentialRampToValueAtTime(24,t+2.8);og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(1.1*g,t+.02);og.gain.exponentialRampToValueAtTime(.001,t+4.2);o.connect(og);og.connect(bus);o.start(t);o.stop(t+4.3);
+ const o2=AC.createOscillator(),g2=AC.createGain();o2.type="triangle";o2.frequency.setValueAtTime(140,t);o2.frequency.exponentialRampToValueAtTime(40,t+.35);g2.gain.setValueAtTime(.8*g,t);g2.gain.exponentialRampToValueAtTime(.001,t+.6);o2.connect(g2);g2.connect(bus);o2.start(t);o2.stop(t+.7);
+ const nb=AC.createBufferSource();nb.buffer=noiseBuf(3);const f=AC.createBiquadFilter();f.type="lowpass";f.frequency.setValueAtTime(5000,t);f.frequency.exponentialRampToValueAtTime(180,t+1.6);const ng=AC.createGain();ng.gain.setValueAtTime(.5*g,t);ng.gain.exponentialRampToValueAtTime(.001,t+2.4);nb.connect(f);f.connect(ng);ng.connect(bus);nb.start(t);
+ for(let i=0;i<12;i++){const s=AC.createOscillator(),sg=AC.createGain(),st=t+.15+Math.random()*1.8;s.frequency.value=2400+Math.random()*5200;sg.gain.setValueAtTime(0,st);sg.gain.linearRampToValueAtTime(.02*g,st+.005);sg.gain.exponentialRampToValueAtTime(.0001,st+.4+Math.random());s.connect(sg);sg.connect(bus);s.start(st);s.stop(st+1.6)}}
+function riser(t,d){const nb=AC.createBufferSource();nb.buffer=noiseBuf(d);const f=AC.createBiquadFilter();f.type="bandpass";f.Q.value=6;f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(6000,t+d);const g=AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3,t+d-.05);g.gain.linearRampToValueAtTime(0,t+d);nb.connect(f);f.connect(g);g.connect(bus);nb.start(t)}
+function padOn(){if(pad)return;pad=AC.createGain();pad.gain.value=0;pad.connect(bus);[55,82.4,110.2].forEach((fq,i)=>{const o=AC.createOscillator(),f=AC.createBiquadFilter();o.type="sawtooth";o.frequency.value=fq;o.detune.value=(i-1)*7;f.type="lowpass";f.frequency.value=380;o.connect(f);f.connect(pad);o.start()});pad.gain.linearRampToValueAtTime(.04,AC.currentTime+6)}
+function run(){if(!AC)return;mode="intro";chill.setAttribute("aria-pressed",false);const t=AC.currentTime+.1;T0=t;$("title").classList.remove("on");riser(t,3.6);boom(t+3.6,1.25);
+ setTimeout(()=>$("title").classList.add("on"),4600);setTimeout(()=>{if(mode==="intro")padOn()},6000)}
+/* UI */
+const ui=$("ui");Object.keys(TIERS).forEach(t=>{const b=document.createElement("button");b.textContent=t[0].toUpperCase()+t.slice(1);b.setAttribute("aria-pressed",t===cur);b.onclick=()=>{try{localStorage.setItem("tr_fxk_tier",t)}catch(e){}location.search="?tier="+t};ui.appendChild(b)});
+const chill=document.createElement("button");chill.textContent="Chill realm";chill.onclick=()=>{mode=mode==="chill"?"intro":"chill";chill.setAttribute("aria-pressed",mode==="chill");if(mode==="intro")run()};ui.appendChild(chill);
+const re=document.createElement("button");re.textContent="Replay boom";re.onclick=()=>run();ui.appendChild(re);
+addEventListener("pointerdown",e=>{if(!AC||e.target.closest("#ui"))return;K.shock(e.clientX/innerWidth,1-e.clientY/innerHeight,1.2);boom(AC.currentTime+.01,.5)});
+$("go").onclick=()=>{setup();AC.resume();$("go").remove();run()};
+if(/[?&]demo/.test(location.search))setTimeout(()=>K.shock(.5,.62,1.6),300);
+/* loop */
+const clock=new THREE.Clock();let beat=0,last=0,el=0,fps=0;
+renderer.setAnimationLoop(now=>{if(TQ.cap&&now-last<TQ.cap)return;const dt=Math.min(.05,clock.getDelta()+(0));last=now;el+=dt;fps=fps*.9+(1/Math.max(dt,1e-3))*.1;
+ if(couple)couple(dt);if(AC&&(mode==="chill"||AC.currentTime-T0>9)){beat-=dt;if(beat<=0){beat=6+Math.random()*3;padOn();boom(AC.currentTime+.02,.35)}}
+ for(let i=0;i<6;i++){K.shk[i*4+2]*=Math.exp(-dt*2.6);SH[i].w+=dt}
+ for(const c of C){c.v.y-=9.8*dt*.5;c.v.multiplyScalar(Math.exp(-dt*1.2));c.p.addScaledVector(c.v,dt);if(c.p.y<FY+c.sc*.1){c.p.y=FY+c.sc*.1;c.v.y*=-.28;c.v.x*=.8;c.v.z*=.8;c.w.multiplyScalar(.7)}
+  c.e.x+=c.w.x*dt;c.e.y+=c.w.y*dt;c.e.z+=c.w.z*dt;c.w.multiplyScalar(Math.exp(-dt*1.5))}
+ const M=new THREE.Matrix4(),q=new THREE.Quaternion(),S=new THREE.Vector3();C.forEach((c,i)=>{S.setScalar(c.sc);M.compose(c.p,q.setFromEuler(c.e),S);chips.setMatrixAt(i,M)});chips.instanceMatrix.needsUpdate=true;
+ punch*=Math.exp(-dt*3);glowK*=Math.exp(-dt*1.4);
+ rig.rotation.y=Math.sin(el*.25)*.35;rig.position.y=.05+Math.sin(el*.6)*.03+punch*.04;
+ if(mat.userData.s)mat.userData.s.uniforms.glow.value=.25+glowK*.8+K.bass*.6;under.intensity=5+glowK*10+K.bass*6;pool.material.opacity=.5+Math.min(.4,glowK*.25);
+ ashMat.uniforms.t.value=el;ashMat.uniforms.bass.value=K.bass;
+ cam.position.x=Math.sin(el*37)*punch*.02;
+ comp?comp.render():renderer.render(scene,cam);
+ if((el*4|0)!==((el-dt)*4|0)){const s=renderer.getDrawingBufferSize(new THREE.Vector2());$("stat").textContent=cur.toUpperCase()+" · "+s.x+"×"+s.y+" · ash "+NA+" · chips "+NC+" · "+fps.toFixed(0)+"fps · bass "+K.bass.toFixed(2)}});
 </script></body></html>

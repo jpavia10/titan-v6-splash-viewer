@@ -24,7 +24,7 @@
   K.shk = new Float32Array(24); K.bass = 0;
   K.shock = function (x, y, p) { var j = 0, m = 9; for (var i = 0; i < 6; i++) if (K.shk[i * 4 + 2] < m) { m = K.shk[i * 4 + 2]; j = i; } K.shk.set([x, y, p == null ? 1 : p, 0], j * 4); };
   function shkStep(dt) { for (var i = 0; i < 6; i++) { K.shk[i * 4 + 2] *= Math.exp(-dt * 2.6); K.shk[i * 4 + 3] += dt * .9; } }
-  K.TIERS = { low: { side: 256, cap: 33, q: .5, rs: .5 }, medium: { side: 448, cap: 16, q: .6, rs: .62 }, high: { side: 768, cap: 15.5, q: .85, rs: .8 }, ultra: { side: 1448, cap: 15.5, q: 1, rs: 1 }, max: { side: 2048, cap: 0, q: 1, rs: 1 } };   /* rs = render scale of the canvas (fill-rate is the phone bottleneck) */
+  K.TIERS = { low: { side: 192, cap: 33, q: .5, rs: .45 }, medium: { side: 316, cap: 16, q: .6, rs: .55 }, high: { side: 768, cap: 15.5, q: .85, rs: .8 }, ultra: { side: 1448, cap: 15.5, q: 1, rs: 1 }, max: { side: 2048, cap: 0, q: 1, rs: 1 } };   /* rs = render scale of the canvas (fill-rate is the phone bottleneck) */
   K.tier = function () { var m = /[?&]tier=(\w+)/.exec(location.search); if (m && K.TIERS[m[1]]) return m[1]; try { var v = localStorage.getItem("tr_fxk_tier"); if (K.TIERS[v]) return v; } catch (e) {} return null; };
   K.setTier = function (t) { try { localStorage.setItem("tr_fxk_tier", t); } catch (e) {} Q.q = (K.TIERS[t] || {}).q || 1; K.apply && K.apply(true); };
   K.tierSide = function () { var t = K.tier(); return t ? K.TIERS[t].side : 0; };

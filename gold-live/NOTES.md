@@ -1,8 +1,9 @@
 # TITAN RELIQUARY live intro (Obsidian theme) — PREVIEW, not gold until Joseph scores it
-LIVE WebGL2 GPU particle sim (TitanFXK), not Cycles, not an mp4. Offline bake killed.
-- Stack: atmos (portal vortex + aurora + light grid + fog) → raymarched volume → 3 GPGPU particle fields (spark shards, ember streaks, cyan motes; up to millions) → HDR post (bloom, trails, chroma).
-- Sound ↔ physics: all audio runs through an AnalyserNode. `K.audioCouple(analyser)` sets `K.bass` (0..1, <110 Hz) every frame (boosts curl turbulence, coin scale, saturation) and on bass onsets fires `K.shock()` which shoves every particle outward (core blast + travelling ring + swirl). The boom is synthesised (sub drop, thump, crack, glass shimmer, convolution hall) — no music, no Deep Note/THX chord.
-- `K.shock(x,y,power)` public: tap fires one + small boom.
-- Quality tiers (buttons, persisted in localStorage tr_fxk_tier, ?tier=): Low 384² · Medium 640² · High 1024² (phone default, S24 floor) · Ultra 1448² (desktop default) · Max 2048² uncapped fps. Per-field count multiplies these.
-- Chill realm button: pad + slow sub heartbeats every 6–9 s gently push the field (ambient second realm).
-- Coin: generated vector medal, 3D spin kicked by bass; particles flow around it (obstacle).
+v3 (2026-10-28): rebuilt to match the v7 poster identity. The purple nebula, the SVG coin hero and the neon are all gone.
+- Look: near-black void #050506. The hero is the knapped black-glass point (obsidian-point.bin, 267k tris) in three.js r160 MeshPhysicalMaterial: clearcoat 1, roughness .04, studio.hdr PMREM env, amber thin-edge Fresnel emissive. It has a cool rim/key light, a warm amber point light from below, and an additive amber pool on a dark slate floor. Black-glass chips rest on the floor. Sparse dark ash is used as accents only and warms toward amber when it gets shoved. The title is TITAN RELIQUARY in gold #f5d48a.
+- Sound to physics: all audio goes through an AnalyserNode, and K.audioCouple feeds bass under 110 Hz into K.bass. A bass onset calls K.shock, which does three things: gives the chips an impulse with a 1/r² falloff (Euler integration, gravity, floor bounce), adds a radial shove to the ash in a GPU vertex shader (6 shock slots, no readback), and makes the edge glow and underglow flare. Tapping fires a shock plus a small boom. The boom is synthesised (sub drop, thump, crack, glass ticks, hall). There's no music and no Deep Note/THX chord. Chill realm plays a pad plus sub heartbeats every 6–9 s.
+- Tiers (stored in localStorage tr_fxk_tier, or set with ?tier=; tr_gl_v=3 clears stale picks once). Phone default = LOW, desktop default = High.
+  Low: 12k ash + 90 chips, render scale .45, DPR ≤1.5, no AA, no bloom, no shadows, 30 fps cap
+  Medium: 40k + 160, scale .55, DPR ≤1.5, light bloom .12, no shadows
+  High: 120k + 220, scale .8 · Ultra: 250k + 300, scale 1 · Max: 600k + 400, DPR 2.5. High and up add shadows and bloom.
+- No volume pass, trails or CA on any tier. fx/kit.js tiers also have rs low .45 / med .55 (synced to tr-live/fx).
