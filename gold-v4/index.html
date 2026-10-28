@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Obsidian — v4 intro attempt (preview)</title>
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+canvas{display:block;width:100vw;height:100vh;height:100dvh}
+#title{position:fixed;left:0;right:0;bottom:9vh;text-align:center;color:#e9dccb;font:300 clamp(26px,9vw,56px)/1 "Cormorant Garamond",Georgia,serif;letter-spacing:.6em;padding-left:.6em;opacity:0;pointer-events:none;text-shadow:0 0 18px rgba(255,170,90,.35)}
+#sub{display:block;margin-top:14px;font:400 10px system-ui;letter-spacing:.5em;color:#a08f7c}
+#veil{position:fixed;inset:0;background:#000;pointer-events:none}
+#ui{position:fixed;right:12px;top:calc(12px + env(safe-area-inset-top));display:flex;gap:8px}
+#ui button,#start{background:rgba(0,0,0,.35);border:1px solid #3a3632;color:#a49c92;font-size:11px;padding:6px 10px;border-radius:14px}
+#start{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;padding:12px 22px;letter-spacing:.2em}
+#tag{position:fixed;left:12px;bottom:calc(10px + env(safe-area-inset-bottom));color:#7a756f;font-size:10px;letter-spacing:.08em}#tag a{color:inherit}</style>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}</script>
+</head><body>
+<div id="title">OBSIDIAN<span id="sub">VOLCANIC GLASS</span></div><div id="veil"></div>
+<div id="ui"><button id="mute">sound on</button><button id="skip">skip</button><button id="replay" style="display:none">replay</button></div>
+<button id="start">▶ PLAY INTRO</button>
+<div id="tag">v4 intro attempt (preview, not gold) · <a href="../">hub</a></div>
+<script type="module" src="obsidian-v4.js"></script></body></html>
