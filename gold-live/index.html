@@ -27,14 +27,15 @@ import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
 import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
 import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
 import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+import {GPUComputationRenderer} from 'three/addons/misc/GPUComputationRenderer.js';
 const $=i=>document.getElementById(i), R=(s=>()=>(s=(s*16807)%2147483647)/2147483647)(2024);
 /* ---- tiers (same names/storage as TitanFXK). Phone default LOW; tr_gl_v=3 clears stale Medium/High picks once ---- */
-const TIERS={low:{ash:12000,chips:90,rs:.45,dpr:1.5,bloom:0,shadow:0,cap:33},medium:{ash:40000,chips:160,rs:.55,dpr:1.5,bloom:.12,shadow:0,cap:16},
- high:{ash:120000,chips:220,rs:.8,dpr:2,bloom:.18,shadow:1,cap:0},ultra:{ash:250000,chips:300,rs:1,dpr:2,bloom:.2,shadow:1,cap:0},max:{ash:600000,chips:400,rs:1,dpr:2.5,bloom:.22,shadow:1,cap:0}};
+const TIERS={low:{layers:[128,224],chips:90,rs:.5,dpr:1.5,bloom:0,shadow:0,cap:16},medium:{layers:[256,384],chips:150,rs:.6,dpr:1.75,bloom:.14,shadow:0,cap:0},
+ high:{layers:[256,512,192],chips:220,rs:.8,dpr:2,bloom:.22,shadow:1,cap:0},ultra:{layers:[384,724,256],chips:300,rs:1,dpr:2,bloom:.26,shadow:1,cap:0},max:{layers:[512,1024,362],chips:400,rs:1,dpr:2.5,bloom:.3,shadow:1,cap:0}};
 const mob=Math.min(screen.width,screen.height)<820||/Android|iPhone|iPad/i.test(navigator.userAgent);
-try{if(!/[?&]tier=/.test(location.search)&&localStorage.getItem("tr_gl_v")!=="3"){localStorage.removeItem("tr_fxk_tier");localStorage.setItem("tr_gl_v","3")}}catch(e){}
+try{if(!/[?&]tier=/.test(location.search)&&localStorage.getItem("tr_gl_v")!=="4"){localStorage.removeItem("tr_fxk_tier");localStorage.setItem("tr_gl_v","4")}}catch(e){}
 const qt=(/[?&]tier=(\w+)/.exec(location.search)||[])[1];let cur=TIERS[qt]?qt:null;try{if(!cur&&TIERS[localStorage.getItem("tr_fxk_tier")])cur=localStorage.getItem("tr_fxk_tier")}catch(e){}
-cur=cur||(mob?"low":"high");try{localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
+cur=cur||(mob?"medium":"high");try{localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
 const TQ=TIERS[cur];
 /* ---- K: TitanFXK-compatible shock + audioCouple ---- */
 const K=window.TitanFXK=window.TitanFXK||{};K.bass=0;K.shk=new Float32Array(24);
@@ -82,23 +83,59 @@ const chipMat=new THREE.MeshPhysicalMaterial({color:0x060506,roughness:.06,clear
 const NC=TQ.chips,chips=new THREE.InstancedMesh(chipGeo,chipMat,NC);chips.castShadow=!!TQ.shadow;scene.add(chips);
 const C=[];for(let i=0;i<NC;i++){const a=R()*6.283,r=.35+R()*R()*1.6,sc=.06+R()*R()*.14;C.push({p0:new THREE.Vector3(Math.cos(a)*r,FY+sc*.1,Math.sin(a)*r*.8-.2),p:new THREE.Vector3(),v:new THREE.Vector3(),e:new THREE.Euler(R()*.3,R()*6,R()*.3),w:new THREE.Vector3(),sc})}
 C.forEach(c=>c.p.copy(c.p0));
-/* ash: sparse GPU accents. Positions analytic in the vertex shader: drift + per-shock radial shove that settles back (no readback) */
-const NA=TQ.ash,ap=new Float32Array(NA*3),as=new Float32Array(NA);
-for(let i=0;i<NA;i++){const a=R()*6.283,r=Math.sqrt(R())*3.2;ap[i*3]=Math.cos(a)*r;ap[i*3+1]=FY+.02+Math.pow(R(),3)*3.4;ap[i*3+2]=Math.sin(a)*r*.8-.4;as[i]=R()}
-const ag=new THREE.BufferGeometry();ag.setAttribute('position',new THREE.BufferAttribute(ap,3));ag.setAttribute('seed',new THREE.BufferAttribute(as,1));
+/* ---- GPGPU particle field (TitanFXK particles-gpu pattern ported into this three.js context so ONE K.shock drives chips + field).
+   Ping-pong pos/vel float textures (GPUComputationRenderer). Flow: orbiting vortex around the glass point + curl-ish noise; hero repulsion;
+   shock slots SH[i]=(x,power,z,age) shared with the chip impulse -> radial blast + travelling ring front; bass widens/speeds the orbit. ---- */
 const SH=[];for(let i=0;i<6;i++)SH.push(new THREE.Vector4(0,0,0,99));
-const ashMat=new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:{t:{value:0},sh:{value:SH},px:{value:DPR},bass:{value:0}},
- vertexShader:`uniform float t,px,bass;uniform vec4 sh[6];attribute float seed;varying float vA,vW;
- void main(){vec3 p=position;float s=seed*6.283;p+=vec3(sin(t*.11+s)*.25,mod(t*.03*(.3+seed),3.4)*0.+sin(t*.2+s*2.)*.08,cos(t*.09+s)*.25);
-  float kick=0.;for(int i=0;i<6;i++){vec3 o=sh[i].xyz;float age=sh[i].w,P=o.y;if(age>8.)continue;vec3 d=p-vec3(o.x,-.2,o.z);float r=length(d)+.15;
-   float f=P*(1.-exp(-age*6.))*exp(-age*.9)/(r*r+.3);p+=normalize(d)*f*.9+vec3(0,f*.6,0);kick+=f;}
-  vA=.35+.65*fract(seed*7.3);vW=clamp(kick*.6+bass*.3,0.,1.);vec4 mv=modelViewMatrix*vec4(p,1.);gl_Position=projectionMatrix*mv;gl_PointSize=(1.2+2.2*fract(seed*13.1))*px*2./-mv.z;}`,
- fragmentShader:`varying float vA,vW;void main(){vec2 c=gl_PointCoord-.5;float d=dot(c,c);if(d>.25)discard;float a=(1.-d*4.)*vA;
-  vec3 col=mix(vec3(.05,.045,.045),vec3(1.,.55,.18),.25+vW*.5);gl_FragColor=vec4(col,a*(.35+vW*.4));}`});
-const ash=new THREE.Points(ag,ashMat);scene.add(ash);
+const HALF=mob?THREE.HalfFloatType:THREE.FloatType;
+const VEL=`uniform float t,dt,bass,kOrbit,kNoise;uniform vec4 sh[6];
+vec3 hsh(vec3 p){p=fract(p*vec3(.1031,.103,.0973));p+=dot(p,p.yxz+33.33);return fract((p.xxy+p.yxx)*p.zyx)-.5;}
+void main(){vec2 uv=gl_FragCoord.xy/resolution.xy;vec4 P=texture2D(tPos,uv);vec4 V=texture2D(tVel,uv);vec3 p=P.xyz,v=V.xyz;float sd=P.w;
+ float r=length(p.xz)+1e-3;vec3 tg=vec3(-p.z,0.,p.x)/r;vec3 rd=vec3(p.x,0.,p.z)/r;
+ float r0=1.0+pow(fract(sd*17.3),.7)*2.2*(1.+bass*.4);float y0=-1.2+fract(sd*31.7)*2.9;
+ vec3 f=tg*kOrbit*(1.+bass*1.8)/(.5+r*.5) + rd*(r0-r)*.9 + vec3(0.,(y0-p.y)*1.4,0.);
+ vec3 q=p*1.3+vec3(0.,t*.15,0.);f+=vec3(sin(q.y*2.1+q.z+t*.3),sin(q.z*1.7+q.x*1.3),cos(q.x*1.9+q.y))*kNoise;
+ float hr=length(vec2(p.x,p.z*1.6));if(hr<.8&&p.y<1.6&&p.y>-1.5)f+=rd*(.8-hr)*30.;
+ for(int i=0;i<6;i++){vec4 k=sh[i];if(k.w>2.5)continue;vec3 d=p-vec3(k.x,-1.47,k.z);float L=length(d)+1e-3;vec3 n=d/L;n.y=abs(n.y)*.6+.15;n=normalize(n);
+  float ring=k.w*3.2,fr=exp(-(L-ring)*(L-ring)*6.)*exp(-k.w*1.2),core=exp(-L*L*.8)*exp(-k.w*7.);
+  f+=(n*(core*40.+fr*16.)+tg*fr*8.)*k.y*(.5+fract(sd*5.1));}
+ v+=f*dt;v*=exp(-dt*(1.6+fract(sd*3.)*.6));
+ gl_FragColor=vec4(v,1.);}`;
+const POS=`uniform float dt;
+void main(){vec2 uv=gl_FragCoord.xy/resolution.xy;vec4 P=texture2D(tPos,uv);vec3 v=texture2D(tVel,uv).xyz;vec3 p=P.xyz+v*dt;
+ if(p.y<-1.45)p.y=-1.45+(-1.45-p.y);if(length(p)>9.)p=vec3(cos(P.w*40.)*1.5,-1.,sin(P.w*40.)*1.5);gl_FragColor=vec4(p,P.w);}`;
+const DRAW_V=`uniform sampler2D tPos,tVel;uniform float px,sz,t;attribute vec2 ref;varying float vS,vW,vK,vY;
+void main(){vec4 P=texture2D(tPos,ref);vec3 v=texture2D(tVel,ref).xyz;vS=P.w;vK=clamp(length(v)*.35,0.,1.);vY=P.y;
+ vW=pow(max(0.,sin(t*(1.5+fract(vS*7.)*4.)+vS*90.)),30.);
+ vec4 mv=modelViewMatrix*vec4(P.xyz,1.);gl_Position=projectionMatrix*mv;gl_PointSize=sz*(.5+fract(vS*13.1))*px*(1.+vK*.6)/-mv.z;gl_PointSize=min(gl_PointSize,28.);}`;
+const SHARD_F=`varying float vS,vW,vK,vY;void main(){vec2 q=gl_PointCoord*2.-1.;float a=fract(vS*91.)*6.28;float c=cos(a),s=sin(a);q=mat2(c,-s,s,c)*q;
+ float d=abs(q.x)*1.9+abs(q.y)*.7;if(d>1.)discard;float edge=smoothstep(.65,1.,d);
+ float under=smoothstep(.2,-1.4,vY);vec3 body=vec3(.07,.068,.075);vec3 glint=mix(vec3(.75,.82,1.),vec3(1.,.62,.25),step(.55,fract(vS*3.3)));
+ vec3 col=body+edge*(glint*(.05+vW*1.8+vK*.6))+vec3(1.,.5,.15)*under*.22*edge;gl_FragColor=vec4(col,.7*(.5+edge*.5));}`;
+const MOTE_F=`uniform vec3 c1,c2;uniform float al;varying float vS,vW,vK,vY;void main(){vec2 q=gl_PointCoord*2.-1.;float a=exp(-dot(q,q)*3.);if(a<.02)discard;
+ vec3 col=mix(c1,c2,fract(vS*5.7))*(1.+vW*2.+vK*1.5);gl_FragColor=vec4(col*a*al,0.);}`;
+const LAYERS=[];
+function layer(side,kind,opt){const gc=new GPUComputationRenderer(side,side,renderer);gc.setDataType(HALF);
+ const p0=gc.createTexture(),v0=gc.createTexture(),A=p0.image.data,B=v0.image.data;
+ for(let i=0;i<side*side;i++){const a=R()*6.283,r=.7+R()*2.4*opt.spread,y=-1.3+R()*2.9;A[i*4]=Math.cos(a)*r;A[i*4+1]=y;A[i*4+2]=Math.sin(a)*r;A[i*4+3]=R();
+  B[i*4]=-Math.sin(a)*.5;B[i*4+1]=0;B[i*4+2]=Math.cos(a)*.5;B[i*4+3]=1}
+ const vv=gc.addVariable('tVel',VEL,v0),pv=gc.addVariable('tPos',POS,p0);gc.setVariableDependencies(vv,[pv,vv]);gc.setVariableDependencies(pv,[pv,vv]);
+ Object.assign(vv.material.uniforms,{t:{value:0},dt:{value:0},bass:{value:0},sh:{value:SH},kOrbit:{value:opt.orbit},kNoise:{value:opt.noise}});pv.material.uniforms.dt={value:0};
+ const e=gc.init();if(e){console.error(e);return}
+ const N=side*side,ref=new Float32Array(N*2);for(let i=0;i<N;i++){ref[i*2]=(i%side+.5)/side;ref[i*2+1]=((i/side|0)+.5)/side}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(N*3),3));g.setAttribute('ref',new THREE.BufferAttribute(ref,2));g.boundingSphere=new THREE.Sphere(new THREE.Vector3(),20);
+ const m=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:kind==='shard'?THREE.NormalBlending:THREE.AdditiveBlending,
+  uniforms:{tPos:{value:null},tVel:{value:null},px:{value:DPR*innerHeight*.5},sz:{value:opt.size},t:{value:0},c1:{value:new THREE.Color(opt.c1||0xffffff)},c2:{value:new THREE.Color(opt.c2||0xffffff)},al:{value:opt.alpha||1}},
+  vertexShader:DRAW_V,fragmentShader:kind==='shard'?SHARD_F:MOTE_F});
+ const pts=new THREE.Points(g,m);pts.frustumCulled=false;pts.renderOrder=kind==='shard'?1:2;scene.add(pts);LAYERS.push({gc,vv,pv,m,N,name:opt.name})}
+const L=TQ.layers;
+layer(L[0],'shard',{name:'shards',orbit:.9,noise:.25,spread:1,size:.015});
+layer(L[1],'mote',{name:'motes',orbit:1.3,noise:.45,spread:1.2,size:.024,c1:0xc9a35a,c2:0xd8dce6,alpha:.8});
+if(L[2])layer(L[2],'mote',{name:'embers',orbit:.7,noise:.6,spread:.8,size:.03,c1:0xff8a2a,c2:0xf5d48a,alpha:.9});
+const NP=LAYERS.reduce((s,l)=>s+l.N,0);
 /* post: bloom only on medium+ (very light) */
 let comp=null;if(TQ.bloom){comp=new EffectComposer(renderer);comp.addPass(new RenderPass(scene,cam));comp.addPass(new UnrealBloomPass(new THREE.Vector2(256,256),TQ.bloom,.4,1.6));comp.addPass(new OutputPass())}
-function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);comp&&comp.setSize(w,h);cam.aspect=w/h;const port=h>w;cam.fov=port?44:30;cam.position.set(0,port?.55:.4,port?6.4:5.4);cam.lookAt(0,-.35,0);cam.updateProjectionMatrix()}
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);comp&&comp.setSize(w,h);cam.aspect=w/h;const port=h>w;cam.fov=port?44:30;cam.position.set(0,port?.55:.4,port?6.4:5.4);cam.lookAt(0,-.35,0);cam.updateProjectionMatrix();for(const l of LAYERS)l.m.uniforms.px.value=DPR*h*.5/Math.tan(cam.fov*Math.PI/360)}
 addEventListener('resize',resize);resize();
 /* shocks: map screen uv to the floor plane around the hero */
 let punch=0,glowK=0;
@@ -139,8 +176,9 @@ renderer.setAnimationLoop(now=>{if(TQ.cap&&now-last<TQ.cap)return;const dt=Math.
  punch*=Math.exp(-dt*3);glowK*=Math.exp(-dt*1.4);
  rig.rotation.y=Math.sin(el*.25)*.35;rig.position.y=.05+Math.sin(el*.6)*.03+punch*.04;
  if(mat.userData.s)mat.userData.s.uniforms.glow.value=.25+glowK*.8+K.bass*.6;under.intensity=5+glowK*10+K.bass*6;pool.material.opacity=.5+Math.min(.4,glowK*.25);
- ashMat.uniforms.t.value=el;ashMat.uniforms.bass.value=K.bass;
+ for(const l of LAYERS){const u=l.vv.material.uniforms;u.t.value=el;u.dt.value=dt;u.bass.value=K.bass;l.pv.material.uniforms.dt.value=dt;l.gc.compute();
+  l.m.uniforms.tPos.value=l.gc.getCurrentRenderTarget(l.pv).texture;l.m.uniforms.tVel.value=l.gc.getCurrentRenderTarget(l.vv).texture;l.m.uniforms.t.value=el}
  cam.position.x=Math.sin(el*37)*punch*.02;
  comp?comp.render():renderer.render(scene,cam);
- if((el*4|0)!==((el-dt)*4|0)){const s=renderer.getDrawingBufferSize(new THREE.Vector2());$("stat").textContent=cur.toUpperCase()+" · "+s.x+"×"+s.y+" · ash "+NA+" · chips "+NC+" · "+fps.toFixed(0)+"fps · bass "+K.bass.toFixed(2)}});
+ if((el*4|0)!==((el-dt)*4|0)){const s=renderer.getDrawingBufferSize(new THREE.Vector2());$("stat").textContent=cur.toUpperCase()+" · "+s.x+"×"+s.y+" · gpu "+(NP/1000).toFixed(0)+"k · chips "+NC+" · "+fps.toFixed(0)+"fps · bass "+K.bass.toFixed(2)}});
 </script></body></html>

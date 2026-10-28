@@ -7,3 +7,9 @@ v3 (2026-10-28): rebuilt to match the v7 poster identity. The purple nebula, the
   Medium: 40k + 160, scale .55, DPR ≤1.5, light bloom .12, no shadows
   High: 120k + 220, scale .8 · Ultra: 250k + 300, scale 1 · Max: 600k + 400, DPR 2.5. High and up add shadows and bloom.
 - No volume pass, trails or CA on any tier. fx/kit.js tiers also have rs low .45 / med .55 (synced to tr-live/fx).
+
+v4 (2026-10-28): middle ground — v3 Obsidian glass hero kept, plus a dense GPGPU particle field.
+- Field: three.js GPUComputationRenderer ping-pong pos/vel textures (half-float on phones), using the TitanFXK particles-gpu pattern ported into the three.js context. Flow = orbit vortex around the point + noise + hero repulsion. Layers: smoky glass shards (dark body, cool-white/amber edge glints), gold/silver motes (additive), and amber embers on High+.
+- One shock drives everything: K.shock -> onShock writes SH[6] (x,power,z,age). The same SH array is the uniform in the velocity shader (core blast + travelling ring front + swirl), and it also gives the CPU chips their impulse and flares the glow. Bass (K.bass) speeds up and widens the orbit.
+- Tiers (GPU particles): Low 128²+224² = 66k, 90 chips, rs .5 · Medium 256²+384² = 213k, 150 chips, rs .6, DPR ≤1.75, bloom .14 (PHONE DEFAULT) · High 256²+512²+192² = 364k · Ultra 384²+724²+256² = 737k · Max 512²+1024²+362² = 1.44M. tr_gl_v=4 resets stored picks once.
+- Gap: the hero mesh isn't decimated yet. It's the full 267k tris on every tier. That's the next lever if Medium stutters on the S24.
