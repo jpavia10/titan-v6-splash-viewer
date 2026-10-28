@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Titan V6 Splash Viewer — REJECTED</title>
+<style>body{margin:0;background:#07080c;color:#e2e8f0;font-family:system-ui,sans-serif}main{max-width:1300px;margin:auto;padding:20px}
+.ban{background:#7f1d1d;color:#fff;padding:18px;border-radius:10px;font-size:22px;font-weight:700;text-align:center}
+h2{color:#fbbf24;margin-top:34px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
+.card{background:#0f121c;border:1px solid #1e293b;border-radius:10px;padding:10px}.card.on{border-color:#fbbf24}video{width:100%;border-radius:6px;background:#000}
+a.btn,button{display:inline-block;background:#f59e0b;color:#111;font-weight:700;padding:12px 20px;border-radius:8px;text-decoration:none;border:0;cursor:pointer;margin-right:8px}
+.phone{width:390px;height:844px;border:12px solid #222;border-radius:40px;overflow:hidden;background:#000}.phone iframe{width:100%;height:100%;border:0}
+ul li{margin:6px 0}kbd{background:#1e293b;padding:2px 6px;border-radius:4px}</style></head><body><main>
+<div class="ban">⛔ REJECTED Gemini V6 “Hollywood THX” package — REVIEW ONLY, NOT FOR SHIP</div>
+<h2>Why it was rejected</h2><ul>
+<li>Cramped 2D Droste / scale-feedback “tunnel” — not real 3D, not spacious cinema</li>
+<li>“TITAN RELIQUARY” smeared on walls, reads mirrored backward (Obsidian, Colossus)</li>
+<li>Template farm: 54 intros share the same first ~4 KB shader; only 8 layout archetypes</li>
+<li>Same synthesized THX Deep Note imitation on every intro (trademark risk)</li>
+<li>Landscape-only proof; letterboxing + tiny subtitles on portrait phones; FLIP_Y unverified in app host</li></ul>
+<p>Full notes: <a style="color:#fbbf24" href="GROK_V6_SPLASH_REVIEW_20261027.md">GROK_V6_SPLASH_REVIEW_20261027.md</a></p>
+<h2>A · Preview videos <small style="color:#64748b">(keys <kbd>1</kbd>–<kbd>5</kbd> jump + play, <kbd>Space</kbd> pause)</small></h2><div class="grid" id="vids"></div>
+<h2>B · Live WebGL theater (all 54 intros)</h2><a class="btn" href="theater.html" target="_blank">Open theater.html ↗</a>
+<h2>C · Phone preview (390×844 portrait)</h2><p style="color:#94a3b8">Theater running inside a phone-sized frame — judge letterboxing and text size.</p>
+<button onclick="ph.src='theater.html'">Load theater in phone</button><button onclick="ph.src='media/'+cur+'.mp4'">Load current video in phone</button>
+<div class="phone" style="margin-top:12px"><iframe id="ph"></iframe></div></main>
+<script>const V=[['obsidian','Obsidian Sun'],['colossus','Colossus'],['tourbillon','Tourbillon'],['silverscreen','Silverscreen'],['quad','Quad showcase']];let cur='obsidian';
+const g=document.getElementById('vids'),ph=document.getElementById('ph');
+V.forEach(([f,n],i)=>g.insertAdjacentHTML('beforeend',`<div class="card" id="c${i}"><b>${i+1}. ${n}</b><video controls preload="metadata" src="media/v6_thx_${f}.mp4"></video></div>`));
+const vs=[...document.querySelectorAll('video')];
+addEventListener('keydown',e=>{const k=+e.key;if(k>=1&&k<=5){vs.forEach(v=>v.pause());document.querySelectorAll('.card').forEach(c=>c.classList.remove('on'));const c=document.getElementById('c'+(k-1));c.classList.add('on');c.scrollIntoView({block:'center'});vs[k-1].play();cur='v6_thx_'+V[k-1][0];}
+ else if(e.key==' '&&e.target.tagName!=='BUTTON'){e.preventDefault();const v=vs.find(v=>!v.paused);v?v.pause():vs[V.findIndex(x=>'v6_thx_'+x[0]==cur)].play()}});
+cur='v6_thx_obsidian';</script></body></html>
