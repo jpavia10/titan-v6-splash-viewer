@@ -1,37 +1,52 @@
-# Obsidian Sun — GOLD STANDARD intro (new baseline)
+# Obsidian Sun — GOLD v2 (craft rebuild)
 
-Single theme, hand-built. Raw WebGL1 + Web Audio, zero dependencies, zero CDN, zero copyrighted audio.
+v1 got rejected, and it deserved it: it was a particle demo. v2 starts over with one object, rendered with care.
 
-## Beats (11 s, portrait-first 9:16)
-1. 0–2.4 s **Void** — black sun barely rimmed, embers breathe up from below, sub swells.
-2. 2.4 s **Fracture** — obsidian core detonates into a 3D shard volume; camera dollies *into* it (real perspective parallax, near shards blow past the lens).
-3. 5.6 s **Title lock** — impact; a spherical shockwave travels through the shard field; title resolves from blur with weight (DOM text, always upright and readable).
-4. 6–11 s **Hold** — slow orbit, conchoidal glints, falling ash, corona god-rays.
+## The hero
+A single knapped obsidian point, ray-marched as a true solid (signed-distance field), not a sprite.
+- **Bifacial knapping:** 30 large, shallow spherical scoops struck in from the edges, alternating faces. Where they overlap they leave the ridged facets of a real knapped point.
+- **Pressure retouch:** a second pass of small, irregular nicks gives a fine serrated edge.
+- **Conchoidal ripples:** concentric rings radiate from each scar's strike point. They live in the surface normal, so they only show up when light grazes them.
+- **Polish scratches:** sparse hairlines run in one direction and slightly roughen the specular where they cross it.
+- **Glass body:** a near-black smoky body, Schlick Fresnel reflection, and a thin-film sheen at grazing angles (a faint rainbow tint on the facets).
+- **Backlit edges:** where the glass is thin, a dim amber glow shows through, the way real obsidian looks held up to the sun.
 
-## Visual techniques
-- **3 GPU particle species** (high tier 78k / mid 37k / low 13.5k): knapped obsidian shards (alpha-blended, rotated asymmetric flake SDF, fake normal → Fresnel rim + specular + flickering conchoidal glints), embers (additive, buoyant life cycle, heat-colour ramp), ash (additive, slow fall).
-- All motion is **closed-form on the GPU**: drag ballistics `r = sp(1−e^(−kt))/k`, radius-dependent orbital shear, analytic swirl field, Gaussian shockwave shell. No CPU per-particle work → stable on phones.
-- **Background**: eclipse disk + fbm corona filaments + 28-step screen-space god-ray march through fbm haze + impact ring, Reinhard tonemap, dithered (no banding).
-- Real 3D camera (perspective + lookAt) with portrait-aware FOV — fills 9:16, never letterboxed.
+## Light
+- **Key:** the black sun (an eclipse disk with a corona that breaks up into filaments) sits directly behind the hero.
+- **Specular sweep:** a warm softbox that only shows in reflections moves slowly across the facets, and a GGX highlight from a moving key light crawls from facet to facet. That sweep is the money shot.
+- **Fill and bounce:** a faint cool fill light and a cool floor bounce in the environment.
+- **Atmosphere:** single-scatter haze with a Henyey–Greenstein phase. The blade casts light shafts into it.
+- **Grade:** ACES tonemap, film grain and a vignette. No lens flares, no bloom soup.
+- **Motes:** dust shows only where the beam lights it.
 
-## Sound (original, no THX / no Deep Note)
-Deep Note's signature = many voices gliding from random pitches to one converging chord resolving to D. This score does the opposite: **every pitch is fixed**. Tension comes from a fixed cluster (A1·E2·B♭2·F3·C4, fifths + tritone) whose *filter opens* and *gain swells*, a high-passed reverse noise riser, then:
-- fracture: inharmonic modal glass partials (1, 2.76, 5.40, 8.93, 13.34 — free-bar ratios) ×47 scattered stereo grains + crack transient + low thud;
-- whoosh: band-passed noise panned L→R as the camera dives;
-- title impact: sub drop 70→26 Hz, filtered noise hit, low fifth braam, metallic strikes, 4.5 s procedural hall convolution;
-- hold: fixed high glass shimmer with tremolo. Bus compressor on master.
+## Camera and pacing (13 s)
+1. **0–2.5 s, dark:** only a rim of corona finds the blade's edge, and one distant glass tone plays.
+2. **2.5–6 s:** the sun rises behind the blade. The camera pushes in and orbits slowly while the specular sweep travels across the scars.
+3. **6.2 s, fracture:** a hairline of light runs across the blade and a short volley of chips sparks off.
+4. **7.2 s, title:** it lands once, in the lower third, and never covers the hero.
+5. **8–13 s, hold:** near-still, so the glass can be looked at.
 
-## Perf / accessibility
-DPR cap per tier (2.0 / 1.5 / 1.0); auto tier (mobile 8+ cores → mid, else low; `?tier=low|mid|high`); adaptive downgrade (drop DPR, then 45% particles if frames >22 ms); `webglcontextlost` → static title; `prefers-reduced-motion` or `?still=1` → single still frame, no audio; tap-to-skip jumps to the held title and ducks audio; mute + replay.
+## Sound
+It's sparse, with real silence between events and a 7-second procedural hall reverb.
+- Every pitch is fixed. Nothing glides and no chord converges, which is the opposite of the THX Deep Note.
+- **Glass:** struck-glass tones built from detuned modal partials (ratios 1, 2.32, 4.25, 6.63), one at a time.
+- **Swell:** a soft filtered rise into the fracture.
+- **Fracture:** a crisp crack and six tiny chip ticks.
+- **Title:** one soft low landing, a warm fixed fifth, and the opening tone again an octave up.
 
-## Why this beats V6
-| V6 reject | Gold |
-|---|---|
-| 2D Droste scale-feedback tunnel | true 3D particle volume + camera move |
-| title smeared backward on walls | upright DOM title, scrim, always legible |
-| 54 clones from 8 archetypes | one bespoke world built for Obsidian |
-| identical thxBus Deep Note imitation | original fixed-pitch score, no THX |
-| 16:9 low-res mp4 proofs | live portrait-first, runs on phone |
-| no low tier / no context-loss path | 3 tiers, adaptive, context-loss + reduced motion |
+## Tiers (they change detail, not the design)
+| Tier | Ray-march precision | Soft shadows | Haze samples | Render scale |
+|---|---|---|---|---|
+| high | 110 steps | on | 24 | 1.0 |
+| mid | 80 steps | on | 14 | 0.8 |
+| low | 56 steps | off | 8 | 0.65 |
 
-Caveats: tested in headless Chrome (SwiftShader) at 390×844; not yet verified on a physical S24 Ultra. Very dense shard overdraw near the lens is the main GPU cost; if a phone stutters, `?tier=low`.
+- If frames run slow, it lowers the render scale on its own.
+- Reduced motion (or `?still=1`) shows a single still frame.
+- If the graphics context is lost, it falls back to the title.
+- Tap to skip, mute, replay, and a link to the V6 reject for comparison.
+
+## Honest caveats
+- So far it's only been judged in headless Chrome stills at 390×844. It hasn't been checked on an S24 yet.
+- The fracture chips are a simple screen-space volley, so they're the least crafted element.
+- The face scars are still a little too regular and soft. Real obsidian has crisper ridges between flakes.
