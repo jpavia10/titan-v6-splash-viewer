@@ -39,3 +39,4 @@ three.js r160 (MIT): MeshPhysicalMaterial (clearcoat + scratch map, thin-film ir
 HDRI: "Studio Small 09" by Sergej Majboroda, Poly Haven, CC0 — https://polyhaven.com/a/studio_small_09
 Thin-edge amber glow: emissive mask from per-vertex thinness, plus a NaN/firefly clamp so bloom doesn't make square blobs.
 Timeline is the same as v4 (14.5 s): dark → reveal → hold → crack and edge glow → title → hold/end. Play / mute / skip / replay.
+Title card: TITAN RELIQUARY wordmark only (theme name removed per Joseph, Oct 28).

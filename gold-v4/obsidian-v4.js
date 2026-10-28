@@ -97,7 +97,7 @@ function pose(t){
   const a=mix(.9,-.35,ss(1.2,7,t))+(t-7)*.015,r=mix(2.6,land?7.4:6.2,ss(1.2,6.5,t))-ss(7,14.5,t)*.5,y=mix(1.1,.3,ss(1.2,6.5,t))-ss(10,14.5,t)*.15;
   cam.position.set(Math.sin(a)*r,y,Math.cos(a)*r);cam.lookAt(0,mix(.8,-.1,ss(1.2,6.5,t))-ss(10,13,t)*.35,0);
   rig.rotation.set(.1,mix(1.4,-.2,ss(1,9,t))+(t-9)*.03,-.07);
-  title.style.opacity=ss(10.2,11.4,t);title.style.transform=`translateY(${(1-ss(10.2,11.6,t))*14}px)`;title.style.letterSpacing=mix(.9,.6,ss(10.2,12,t))+'em';
+  title.style.opacity=ss(10.2,11.4,t);title.style.transform=`translateY(${(1-ss(10.2,11.6,t))*14}px)`;title.style.letterSpacing=mix(.5,.32,ss(10.2,12,t))+'em';
   veil.style.opacity=Math.max(1-ss(.2,2,t),ss(13.6,14.5,t)*.0);
 }
 function now(){return FREEZE!=null?FREEZE:playing?(performance.now()-t0)/1000+offset:offset;}
