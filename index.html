@@ -1,28 +1,107 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Titan V6 Splash Viewer — REJECTED</title>
-<style>body{margin:0;background:#07080c;color:#e2e8f0;font-family:system-ui,sans-serif}main{max-width:1300px;margin:auto;padding:20px}
-.ban{background:#7f1d1d;color:#fff;padding:18px;border-radius:10px;font-size:22px;font-weight:700;text-align:center}
-h2{color:#fbbf24;margin-top:34px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px}
-.card{background:#0f121c;border:1px solid #1e293b;border-radius:10px;padding:10px}.card.on{border-color:#fbbf24}video{width:100%;border-radius:6px;background:#000}
-a.btn,button{display:inline-block;background:#f59e0b;color:#111;font-weight:700;padding:12px 20px;border-radius:8px;text-decoration:none;border:0;cursor:pointer;margin-right:8px}
-.phone{width:390px;height:844px;border:12px solid #222;border-radius:40px;overflow:hidden;background:#000}.phone iframe{width:100%;height:100%;border:0}
-ul li{margin:6px 0}kbd{background:#1e293b;padding:2px 6px;border-radius:4px}</style></head><body><main>
-<div class="ban">⛔ REJECTED Gemini V6 “Hollywood THX” package — REVIEW ONLY, NOT FOR SHIP</div>
-<h2>Why it was rejected</h2><ul>
-<li>Cramped 2D Droste / scale-feedback “tunnel” — not real 3D, not spacious cinema</li>
-<li>“TITAN RELIQUARY” smeared on walls, reads mirrored backward (Obsidian, Colossus)</li>
-<li>Template farm: 54 intros share the same first ~4 KB shader; only 8 layout archetypes</li>
-<li>Same synthesized THX Deep Note imitation on every intro (trademark risk)</li>
-<li>Landscape-only proof; letterboxing + tiny subtitles on portrait phones; FLIP_Y unverified in app host</li></ul>
-<p>Full notes: <a style="color:#fbbf24" href="GROK_V6_SPLASH_REVIEW_20261027.md">GROK_V6_SPLASH_REVIEW_20261027.md</a></p>
-<h2>A · Preview videos <small style="color:#64748b">(keys <kbd>1</kbd>–<kbd>5</kbd> jump + play, <kbd>Space</kbd> pause)</small></h2><div class="grid" id="vids"></div>
-<h2>B · Live WebGL theater (all 54 intros)</h2><a class="btn" href="theater.html" target="_blank">Open theater.html ↗</a>
-<h2>C · Phone preview (390×844 portrait)</h2><p style="color:#94a3b8">Theater running inside a phone-sized frame — judge letterboxing and text size.</p>
-<button onclick="ph.src='theater.html'">Load theater in phone</button><button onclick="ph.src='media/'+cur+'.mp4'">Load current video in phone</button>
-<div class="phone" style="margin-top:12px"><iframe id="ph"></iframe></div></main>
-<script>const V=[['obsidian','Obsidian Sun'],['colossus','Colossus'],['tourbillon','Tourbillon'],['silverscreen','Silverscreen'],['quad','Quad showcase']];let cur='obsidian';
-const g=document.getElementById('vids'),ph=document.getElementById('ph');
-V.forEach(([f,n],i)=>g.insertAdjacentHTML('beforeend',`<div class="card" id="c${i}"><b>${i+1}. ${n}</b><video controls preload="metadata" src="media/v6_thx_${f}.mp4"></video></div>`));
-const vs=[...document.querySelectorAll('video')];
-addEventListener('keydown',e=>{const k=+e.key;if(k>=1&&k<=5){vs.forEach(v=>v.pause());document.querySelectorAll('.card').forEach(c=>c.classList.remove('on'));const c=document.getElementById('c'+(k-1));c.classList.add('on');c.scrollIntoView({block:'center'});vs[k-1].play();cur='v6_thx_'+V[k-1][0];}
- else if(e.key==' '&&e.target.tagName!=='BUTTON'){e.preventDefault();const v=vs.find(v=>!v.paused);v?v.pause():vs[V.findIndex(x=>'v6_thx_'+x[0]==cur)].play()}});
-cur='v6_thx_obsidian';</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>V6 splash · 54 intros · REJECTED</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#07080c; color:#e2e8f0; font-family:system-ui,-apple-system,sans-serif; }
+  .ban { position:sticky; top:0; z-index:20; background:#7f1d1d; color:#fff; padding:12px 14px; font-weight:800; text-align:center; font-size:15px; }
+  main { padding:14px; max-width:900px; margin:0 auto; padding-bottom:80px; }
+  h1 { font-size:18px; margin:16px 0 6px; }
+  h2 { font-size:15px; color:#fbbf24; margin:22px 0 10px; }
+  p,li { color:#cbd5e1; font-size:14px; line-height:1.45; }
+  .cta { display:block; width:100%; text-align:center; background:#f59e0b; color:#111; font-weight:800; padding:16px; border-radius:12px; text-decoration:none; font-size:16px; margin:12px 0; }
+  .cta2 { display:block; width:100%; text-align:center; background:#1e293b; color:#fbbf24; border:1px solid #334155; font-weight:700; padding:14px; border-radius:12px; text-decoration:none; font-size:15px; margin:8px 0; }
+  .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  @media (min-width:520px) { .grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+  .chip { display:block; padding:12px 10px; background:#0f121c; border:1px solid #1e293b; border-radius:10px; color:#e2e8f0; text-decoration:none; text-align:center; font-size:13px; font-weight:600; }
+  .chip:active { border-color:#fbbf24; color:#fbbf24; }
+  .vid { background:#0f121c; border:1px solid #1e293b; border-radius:12px; padding:10px; margin-bottom:10px; }
+  video { width:100%; border-radius:8px; background:#000; }
+  .note { font-size:12px; color:#94a3b8; }
+  a.md { color:#fbbf24; }
+</style>
+</head>
+<body>
+<div class="ban">REJECTED · review only · not for ship</div>
+<main>
+  <h1>Gemini V6 “Hollywood THX” — all 54</h1>
+  <p>These are terrible on purpose of the review: cramped 2D Droste tunnels, mirrored wall text, clone farm, Deep Note imitation. Tap any theme to play the live WebGL intro.</p>
+  <a class="cta" href="theater.html?t=obsidian">Open full theater (54 picker)</a>
+  <a class="cta2" href="theater.html?t=colossus">Jump: Colossus</a>
+
+  <h2>All 54 intros</h2>
+  <p class="note">Each opens the live theater on that theme. Rotate your phone / use fullscreen in theater if needed.</p>
+  <div class="grid">
+  <a class="chip" href="theater.html?t=abyss">abyss</a>
+  <a class="chip" href="theater.html?t=afterhours">afterhours</a>
+  <a class="chip" href="theater.html?t=alchemist">alchemist</a>
+  <a class="chip" href="theater.html?t=arcade">arcade</a>
+  <a class="chip" href="theater.html?t=aurora">aurora</a>
+  <a class="chip" href="theater.html?t=banknote">banknote</a>
+  <a class="chip" href="theater.html?t=bauhaus">bauhaus</a>
+  <a class="chip" href="theater.html?t=campfire">campfire</a>
+  <a class="chip" href="theater.html?t=canopy">canopy</a>
+  <a class="chip" href="theater.html?t=cassette">cassette</a>
+  <a class="chip" href="theater.html?t=cathedral">cathedral</a>
+  <a class="chip" href="theater.html?t=colossus">colossus</a>
+  <a class="chip" href="theater.html?t=conservator">conservator</a>
+  <a class="chip" href="theater.html?t=construct">construct</a>
+  <a class="chip" href="theater.html?t=contour">contour</a>
+  <a class="chip" href="theater.html?t=cursedwing">cursedwing</a>
+  <a class="chip" href="theater.html?t=darkroom">darkroom</a>
+  <a class="chip" href="theater.html?t=diorama">diorama</a>
+  <a class="chip" href="theater.html?t=drafting">drafting</a>
+  <a class="chip" href="theater.html?t=dynasty">dynasty</a>
+  <a class="chip" href="theater.html?t=fireside">fireside</a>
+  <a class="chip" href="theater.html?t=freefall">freefall</a>
+  <a class="chip" href="theater.html?t=glacier">glacier</a>
+  <a class="chip" href="theater.html?t=glasshouse">glasshouse</a>
+  <a class="chip" href="theater.html?t=kaleido">kaleido</a>
+  <a class="chip" href="theater.html?t=lightwell">lightwell</a>
+  <a class="chip" href="theater.html?t=marbled">marbled</a>
+  <a class="chip" href="theater.html?t=neon">neon</a>
+  <a class="chip" href="theater.html?t=nocturne">nocturne</a>
+  <a class="chip" href="theater.html?t=noir">noir</a>
+  <a class="chip" href="theater.html?t=notepad">notepad</a>
+  <a class="chip" href="theater.html?t=obsidian">obsidian</a>
+  <a class="chip" href="theater.html?t=odyssey">odyssey</a>
+  <a class="chip" href="theater.html?t=orbit">orbit</a>
+  <a class="chip" href="theater.html?t=papercut">papercut</a>
+  <a class="chip" href="theater.html?t=privatebank">privatebank</a>
+  <a class="chip" href="theater.html?t=pulp">pulp</a>
+  <a class="chip" href="theater.html?t=roman">roman</a>
+  <a class="chip" href="theater.html?t=sahel">sahel</a>
+  <a class="chip" href="theater.html?t=saltflat">saltflat</a>
+  <a class="chip" href="theater.html?t=samadhi">samadhi</a>
+  <a class="chip" href="theater.html?t=silkroad">silkroad</a>
+  <a class="chip" href="theater.html?t=silverscreen">silverscreen</a>
+  <a class="chip" href="theater.html?t=sketch">sketch</a>
+  <a class="chip" href="theater.html?t=solaris">solaris</a>
+  <a class="chip" href="theater.html?t=steampunk">steampunk</a>
+  <a class="chip" href="theater.html?t=supercell">supercell</a>
+  <a class="chip" href="theater.html?t=tarot">tarot</a>
+  <a class="chip" href="theater.html?t=terminal">terminal</a>
+  <a class="chip" href="theater.html?t=tourbillon">tourbillon</a>
+  <a class="chip" href="theater.html?t=valhalla">valhalla</a>
+  <a class="chip" href="theater.html?t=xeno">xeno</a>
+  <a class="chip" href="theater.html?t=y2k">y2k</a>
+  <a class="chip" href="theater.html?t=zen">zen</a>
+  </div>
+
+  <h2>Only 5 recorded mp4 proofs Gemini shipped</h2>
+  <p class="note">Everything else never got a video — that’s why the hub looked like “only 5.”</p>
+  <div class="vid"><b>1. Obsidian Sun</b><video controls playsinline preload="metadata" src="media/v6_thx_obsidian.mp4"></video></div>
+  <div class="vid"><b>2. Colossus</b><video controls playsinline preload="metadata" src="media/v6_thx_colossus.mp4"></video></div>
+  <div class="vid"><b>3. Tourbillon</b><video controls playsinline preload="metadata" src="media/v6_thx_tourbillon.mp4"></video></div>
+  <div class="vid"><b>4. Silverscreen</b><video controls playsinline preload="metadata" src="media/v6_thx_silverscreen.mp4"></video></div>
+  <div class="vid"><b>5. Quad showcase</b><video controls playsinline preload="metadata" src="media/v6_thx_quad.mp4"></video></div>
+
+  <p>Notes: <a class="md" href="GROK_V6_SPLASH_REVIEW_20261027.md">GROK_V6_SPLASH_REVIEW_20261027.md</a></p>
+</main>
+</body>
+</html>

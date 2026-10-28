@@ -32206,7 +32206,22 @@
     });
 
     window.addEventListener("load", function() {
-      selectTheme("colossus", true);
+      var q = new URLSearchParams(location.search);
+      var want = (q.get("t") || q.get("theme") || (location.hash || "").replace(/^#/, "") || "colossus").toLowerCase();
+      if (!window.TitanIntro.specs[want]) want = "colossus";
+      selectTheme(want, true);
+      try {
+        if (window.innerWidth < 700) {
+          document.querySelectorAll("button, [role=button], .viewport-tab, a").forEach(function(el){
+            var t = (el.textContent || "").toLowerCase();
+            if (t.indexOf("phone") >= 0 || t.indexOf("390") >= 0) { el.click(); }
+          });
+        }
+      } catch (e) {}
+      requestAnimationFrame(tick);
+    });
+        }
+      } catch(e) {}
       requestAnimationFrame(tick);
     });
   </script>
