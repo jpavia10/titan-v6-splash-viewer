@@ -1,0 +1,80 @@
+<!doctype html><html lang="en" data-atmo="obsidian"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TITAN RELIQUARY — live intro (preview)</title>
+<style>
+html,body{margin:0;height:100%;background:#000;color:#eef;font:500 14px system-ui,sans-serif;overflow:hidden;touch-action:none}
+canvas{transition:filter .4s}
+#go{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#000;cursor:pointer}
+#go b{font:300 13px/1 system-ui;letter-spacing:.5em;opacity:.7;animation:p 2s infinite}@keyframes p{50%{opacity:.25}}
+#title{position:fixed;left:0;right:0;top:58%;z-index:5;text-align:center;pointer-events:none;opacity:0;transition:opacity 2.2s,letter-spacing 4s;letter-spacing:.6em;
+ font:200 clamp(20px,5.6vw,56px)/1 "Optima","Futura",system-ui;color:#f3efe6;text-shadow:0 0 18px rgba(160,120,255,.7),0 0 60px rgba(60,200,255,.35)}
+#title.on{opacity:1;letter-spacing:.22em;white-space:nowrap}
+#scene{position:fixed;inset:0;z-index:3;pointer-events:none;perspective:900px;display:grid;place-items:center}
+.coin-thumb{width:min(38vw,200px);height:min(38vw,200px);transform-style:preserve-3d;opacity:0;margin-top:-22vh;transition:opacity 1.2s}
+.coin-thumb img{width:100%;height:100%;border-radius:50%;display:block;filter:drop-shadow(0 0 30px rgba(255,190,90,.45))}
+#flash{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff,rgba(150,110,255,.5) 25%,transparent 65%)}
+#ui{position:fixed;left:0;right:0;bottom:0;z-index:7;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.7))}
+#ui button{border:1px solid rgba(255,255,255,.25);background:rgba(20,20,30,.6);color:#fff;border-radius:999px;padding:8px 12px;font:inherit}
+#ui button[aria-pressed=true]{background:#fff;color:#000}
+#stat{position:fixed;top:calc(8px + env(safe-area-inset-top));right:10px;z-index:7;font:11px ui-monospace,monospace;opacity:.6;text-align:right}
+</style></head><body>
+<div id="go"><b>TAP TO IGNITE · SOUND ON</b></div>
+<div id="scene"><div class="coin-thumb" id="coin"><img alt="" id="coinimg"></div></div>
+<div id="title">TITAN RELIQUARY</div><div id="flash"></div><div id="stat"></div>
+<nav id="ui"></nav>
+<script src="fx/kit.js?v=l1"></script><script src="fx/atmos.js?v=l1"></script><script src="fx/particles-gpu.js?v=l1"></script><script src="fx/volume.js?v=l1"></script><script src="fx/post.js?v=l1"></script>
+<script>
+(function(){
+var K=TitanFXK, $=function(i){return document.getElementById(i)};
+/* coin: generated gold medal (vector, no collection photo) */
+$("coinimg").src="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="g" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff6d0"/><stop offset=".35" stop-color="#e8b64a"/><stop offset=".8" stop-color="#7a4f12"/><stop offset="1" stop-color="#3a2405"/></radialGradient></defs><circle cx="100" cy="100" r="98" fill="url(#g)"/><circle cx="100" cy="100" r="86" fill="none" stroke="#fde7a0" stroke-width="2" stroke-dasharray="2 4"/><circle cx="100" cy="100" r="78" fill="none" stroke="#5c3a0a" stroke-width="1.5"/><path d="M100 38l12 40h-24zM70 82h60l-8 70H78z" fill="#5c3a0a" opacity=".75"/><text x="100" y="178" font-family="Georgia" font-size="13" text-anchor="middle" fill="#4a2e08" letter-spacing="3">RELIQUARY</text></svg>');
+/* OBSIDIAN stack: dark glass void, psychedelic portal vortex + aurora, futuristic light grid; shards / embers / motes all ride the shock field */
+K.themes.obsidian={stack:[
+ {mod:"atmos",top:[.01,.0,.03],bottom:[0,0,.005],portal:.08,portalC:[.45,.15,1],portalAt:[.5,.62],aurora:.2,auroraC:[.1,.9,.8],grid:.5,gridC:[.25,.1,.8],trailC:[0,.9,1],horizon:.3,fog:.12,fogC:[.15,.08,.3],vig:.6,grain:.02,touchGlow:.6,touchC:[.6,.4,1]},
+ {mod:"volume",steps:40,density:.12,color:[.25,.2,.45],light:[.6,.35,1],lightAt:[.5,.62],follow:true,lightPow:.8,ambient:[.01,.005,.03],low:.4},
+ {mod:"particles",count:.35,curl:1.1,scale:2.6,speed:.04,life:.03,size:2.8,shape:"spark",c1:[.92,.88,1],c2:[.35,.25,.6],alpha:.55,blend:"add",glint:1,depth:.9,rake:1,shock:1.6,swirl:.35,spawn:"any",obstacles:true},
+ {mod:"particles",count:.5,curl:.8,scale:1.8,speed:.03,drift:[0,.01],life:.07,size:1.6,shape:"streak",c1:[1,.55,.15],c2:[1,.15,.5],alpha:.35,blend:"add",rake:1,shock:1.2,swirl:-.6,obstacles:true},
+ {mod:"particles",count:1,curl:1.6,scale:3.2,speed:.02,life:.05,size:1.1,shape:"mote",c1:[.3,.95,1],c2:[.7,.4,1],alpha:.22,blend:"add",rake:1.2,shock:.9,swirl:1.1,obstacles:true},
+ {mod:"post",bloom:1.1,threshold:.7,exposure:.95,aberr:.9,grain:.03,vig:.45,trails:.55}]};
+var TIERS=["low","medium","high","ultra","max"], ui=$("ui"); var cur=K.tier()||((Math.min(screen.width,screen.height)<820)?"high":"ultra");
+if(!K.tier()) try{localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
+TIERS.forEach(function(t){var b=document.createElement("button");b.textContent=t[0].toUpperCase()+t.slice(1);b.setAttribute("aria-pressed",t===cur);b.onclick=function(){cur=t;K.setTier(t);[].forEach.call(ui.children,function(x){x.setAttribute("aria-pressed",x===b)})};ui.appendChild(b)});
+var chill=document.createElement("button");chill.textContent="Chill realm";chill.onclick=function(){mode=mode==="chill"?"intro":"chill";chill.setAttribute("aria-pressed",mode==="chill");if(mode==="intro")run()};ui.appendChild(chill);
+var re=document.createElement("button");re.textContent="Replay boom";re.onclick=function(){run()};ui.appendChild(re);
+/* ---------- audio: everything goes through an analyser; the analyser's bass drives the particles (sound -> physics) ---------- */
+var AC,bus,an,couple,mode="intro",T0=0,pad;
+function noiseBuf(s){var b=AC.createBuffer(1,AC.sampleRate*s,AC.sampleRate),d=b.getChannelData(0);for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b}
+function impulse(){var n=AC.sampleRate*3.5,b=AC.createBuffer(2,n,AC.sampleRate);for(var c=0;c<2;c++){var d=b.getChannelData(c);for(var i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3.2)}return b}
+function setup(){AC=new (window.AudioContext||webkitAudioContext)();an=AC.createAnalyser();an.fftSize=2048;an.smoothingTimeConstant=.35;
+ var comp=AC.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;comp.attack.value=.01;comp.release.value=.25;
+ bus=AC.createGain();var rv=AC.createConvolver();rv.buffer=impulse();var wet=AC.createGain();wet.gain.value=.32;
+ bus.connect(comp);bus.connect(rv);rv.connect(wet);wet.connect(comp);comp.connect(an);an.connect(AC.destination);
+ couple=K.audioCouple(an,{hz:110,onHit:function(p){K.shock(.5,.62,p);kick(p)}});}
+/* theatrical boom: sub drop + body thump + filtered noise crack + glass shimmer tail (synthesised, no music, no trademark chord) */
+function boom(t,g){g=g||1;var o=AC.createOscillator(),og=AC.createGain();o.type="sine";o.frequency.setValueAtTime(62,t);o.frequency.exponentialRampToValueAtTime(24,t+2.8);
+ og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(1.1*g,t+.02);og.gain.exponentialRampToValueAtTime(.001,t+4.2);o.connect(og);og.connect(bus);o.start(t);o.stop(t+4.3);
+ var o2=AC.createOscillator(),g2=AC.createGain();o2.type="triangle";o2.frequency.setValueAtTime(140,t);o2.frequency.exponentialRampToValueAtTime(40,t+.35);g2.gain.setValueAtTime(.8*g,t);g2.gain.exponentialRampToValueAtTime(.001,t+.6);o2.connect(g2);g2.connect(bus);o2.start(t);o2.stop(t+.7);
+ var n=AC.createBufferSource();n.buffer=noiseBuf(3);var f=AC.createBiquadFilter();f.type="lowpass";f.frequency.setValueAtTime(5000,t);f.frequency.exponentialRampToValueAtTime(180,t+1.6);var ng=AC.createGain();ng.gain.setValueAtTime(.55*g,t);ng.gain.exponentialRampToValueAtTime(.001,t+2.4);n.connect(f);f.connect(ng);ng.connect(bus);n.start(t);
+ for(var i=0;i<14;i++){var s=AC.createOscillator(),sg=AC.createGain(),st=t+.15+Math.random()*1.8;s.type="sine";s.frequency.value=2400+Math.random()*5200;sg.gain.setValueAtTime(0,st);sg.gain.linearRampToValueAtTime(.025*g,st+.005);sg.gain.exponentialRampToValueAtTime(.0001,st+.4+Math.random());s.connect(sg);sg.connect(bus);s.start(st);s.stop(st+1.6)}}
+function riser(t,d){var n=AC.createBufferSource();n.buffer=noiseBuf(d);var f=AC.createBiquadFilter();f.type="bandpass";f.Q.value=6;f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(6000,t+d);
+ var g=AC.createGain();g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.35,t+d-.05);g.gain.linearRampToValueAtTime(0,t+d);n.connect(f);f.connect(g);g.connect(bus);n.start(t);
+ var o=AC.createOscillator(),og=AC.createGain();o.frequency.setValueAtTime(30,t);o.frequency.linearRampToValueAtTime(55,t+d);og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(.35,t+d);og.gain.setValueAtTime(0,t+d);o.connect(og);og.connect(bus);o.start(t);o.stop(t+d+.05)}
+function padOn(){if(pad)return;pad=AC.createGain();pad.gain.value=0;pad.connect(bus);[55,82.4,110.2,164.8].forEach(function(fq,i){var o=AC.createOscillator(),l=AC.createOscillator(),lg=AC.createGain(),f=AC.createBiquadFilter();o.type="sawtooth";o.frequency.value=fq;o.detune.value=(i-1.5)*7;f.type="lowpass";f.frequency.value=420;l.frequency.value=.05+i*.03;lg.gain.value=260;l.connect(lg);lg.connect(f.frequency);o.connect(f);f.connect(pad);o.start();l.start()});pad.gain.linearRampToValueAtTime(.05,AC.currentTime+6)}
+/* visual kick on audio hit */
+var hue=0,hueV=0,spin=0,spinV=0,lift=0;
+function kick(p){hueV+=60*p;spinV+=900*p;$("flash").animate([{opacity:0},{opacity:Math.min(1,.45*p)},{opacity:0}],{duration:900,easing:"ease-out"})}
+function run(){if(!AC)return;mode="intro";chill.setAttribute("aria-pressed",false);var t=AC.currentTime+.1;T0=t;$("title").classList.remove("on");$("coin").style.opacity=0;
+ riser(t,3.6);boom(t+3.6,1.25);setTimeout(function(){$("coin").style.opacity=1},3500);setTimeout(function(){$("title").classList.add("on")},4600);
+ setTimeout(function(){if(mode==="intro"){padOn()}},6000)}
+/* chill realm: slow sub heartbeats every ~7 s gently shove the field; pad keeps playing */
+var beat=0;
+K.onFrame=function(dt){var e=couple?couple(dt):0;
+ if(AC&&(mode==="chill"||AC.currentTime-T0>9)){beat-=dt;if(beat<=0){beat=6+Math.random()*3;padOn();boom(AC.currentTime+.02,.35)}}
+ hueV*=Math.exp(-dt*1.5);hue+=dt*(8+hueV)+K.bass*30*dt;spinV*=Math.exp(-dt*.9);spin+=dt*(25+spinV);lift+=dt;
+ document.querySelector("canvas")&&(document.querySelector("canvas").style.filter="hue-rotate("+(Math.sin(hue*.02)*35+hueV*.5)+"deg) saturate("+(1.1+K.bass*.8)+")");
+ $("coin").style.transform="translateY("+(Math.sin(lift*.7)*8-K.bass*20)+"px) rotateY("+spin+"deg) rotateX("+(14*Math.sin(lift*.4))+"deg) scale("+(1+K.bass*.25)+")";
+ var d=K.debug();$("stat").textContent=cur.toUpperCase()+" · "+d.w+"×"+d.h+" · "+(d.parts||[]).join(" ")+" · bass "+(K.bass).toFixed(2)};
+/* touch = shock at your finger + small boom (UI fires K.shock directly) */
+addEventListener("pointerdown",function(e){if(!AC||e.target.closest("#ui"))return;var x=e.clientX/innerWidth,y=1-e.clientY/innerHeight;K.shock(x,y,1.2);boom(AC.currentTime+.01,.5)});
+$("go").onclick=function(){setup();AC.resume();$("go").remove();run()};
+})();
+</script></body></html>
