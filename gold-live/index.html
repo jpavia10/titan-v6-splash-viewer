@@ -2,16 +2,16 @@
 <title>TITAN RELIQUARY — live intro (preview)</title>
 <style>
 html,body{margin:0;height:100%;background:#000;color:#eef;font:500 14px system-ui,sans-serif;overflow:hidden;touch-action:none}
-canvas{transition:filter .4s}
+
 #go{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#000;cursor:pointer}
 #go b{font:300 13px/1 system-ui;letter-spacing:.5em;opacity:.7;animation:p 2s infinite}@keyframes p{50%{opacity:.25}}
 #title{position:fixed;left:0;right:0;top:58%;z-index:5;text-align:center;pointer-events:none;opacity:0;transition:opacity 2.2s,letter-spacing 4s;letter-spacing:.6em;
- font:200 clamp(20px,5.6vw,56px)/1 "Optima","Futura",system-ui;color:#f3efe6;text-shadow:0 0 18px rgba(160,120,255,.7),0 0 60px rgba(60,200,255,.35)}
+ font:200 clamp(20px,5.6vw,56px)/1 "Optima","Futura",system-ui;color:#f3efe6;text-shadow:0 0 14px rgba(140,100,230,.55),0 0 50px rgba(60,30,120,.5)}
 #title.on{opacity:1;letter-spacing:.22em;white-space:nowrap}
 #scene{position:fixed;inset:0;z-index:3;pointer-events:none;perspective:900px;display:grid;place-items:center}
 .coin-thumb{width:min(38vw,200px);height:min(38vw,200px);transform-style:preserve-3d;opacity:0;margin-top:-22vh;transition:opacity 1.2s}
-.coin-thumb img{width:100%;height:100%;border-radius:50%;display:block;filter:drop-shadow(0 0 30px rgba(255,190,90,.45))}
-#flash{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff,rgba(150,110,255,.5) 25%,transparent 65%)}
+.coin-thumb img{width:100%;height:100%;border-radius:50%;display:block;filter:drop-shadow(0 0 22px rgba(130,90,220,.35)) drop-shadow(0 0 6px rgba(255,200,120,.25))}
+#flash{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;mix-blend-mode:screen;background:radial-gradient(circle at 50% 50%,#fff,rgba(90,60,170,.45) 25%,transparent 65%)}
 #ui{position:fixed;left:0;right:0;bottom:0;z-index:7;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(0,0,0,.7))}
 #ui button{border:1px solid rgba(255,255,255,.25);background:rgba(20,20,30,.6);color:#fff;border-radius:999px;padding:8px 12px;font:inherit}
 #ui button[aria-pressed=true]{background:#fff;color:#000}
@@ -21,23 +21,31 @@ canvas{transition:filter .4s}
 <div id="scene"><div class="coin-thumb" id="coin"><img alt="" id="coinimg"></div></div>
 <div id="title">TITAN RELIQUARY</div><div id="flash"></div><div id="stat"></div>
 <nav id="ui"></nav>
-<script src="fx/kit.js?v=l1"></script><script src="fx/atmos.js?v=l1"></script><script src="fx/particles-gpu.js?v=l1"></script><script src="fx/volume.js?v=l1"></script><script src="fx/post.js?v=l1"></script>
+<script src="fx/kit.js?v=l2"></script><script src="fx/atmos.js?v=l2"></script><script src="fx/particles-gpu.js?v=l2"></script><script src="fx/volume.js?v=l2"></script><script src="fx/post.js?v=l2"></script>
 <script>
 (function(){
 var K=TitanFXK, $=function(i){return document.getElementById(i)};
 /* coin: generated gold medal (vector, no collection photo) */
 $("coinimg").src="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="g" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff6d0"/><stop offset=".35" stop-color="#e8b64a"/><stop offset=".8" stop-color="#7a4f12"/><stop offset="1" stop-color="#3a2405"/></radialGradient></defs><circle cx="100" cy="100" r="98" fill="url(#g)"/><circle cx="100" cy="100" r="86" fill="none" stroke="#fde7a0" stroke-width="2" stroke-dasharray="2 4"/><circle cx="100" cy="100" r="78" fill="none" stroke="#5c3a0a" stroke-width="1.5"/><path d="M100 38l12 40h-24zM70 82h60l-8 70H78z" fill="#5c3a0a" opacity=".75"/><text x="100" y="178" font-family="Georgia" font-size="13" text-anchor="middle" fill="#4a2e08" letter-spacing="3">RELIQUARY</text></svg>');
-/* OBSIDIAN stack: dark glass void, psychedelic portal vortex + aurora, futuristic light grid; shards / embers / motes all ride the shock field */
-K.themes.obsidian={stack:[
- {mod:"atmos",top:[.01,.0,.03],bottom:[0,0,.005],portal:.08,portalC:[.45,.15,1],portalAt:[.5,.62],aurora:.2,auroraC:[.1,.9,.8],grid:.5,gridC:[.25,.1,.8],trailC:[0,.9,1],horizon:.3,fog:.12,fogC:[.15,.08,.3],vig:.6,grain:.02,touchGlow:.6,touchC:[.6,.4,1]},
- {mod:"volume",steps:40,density:.12,color:[.25,.2,.45],light:[.6,.35,1],lightAt:[.5,.62],follow:true,lightPow:.8,ambient:[.01,.005,.03],low:.4},
- {mod:"particles",count:.35,curl:1.1,scale:2.6,speed:.04,life:.03,size:2.8,shape:"spark",c1:[.92,.88,1],c2:[.35,.25,.6],alpha:.55,blend:"add",glint:1,depth:.9,rake:1,shock:1.6,swirl:.35,spawn:"any",obstacles:true},
- {mod:"particles",count:.5,curl:.8,scale:1.8,speed:.03,drift:[0,.01],life:.07,size:1.6,shape:"streak",c1:[1,.55,.15],c2:[1,.15,.5],alpha:.35,blend:"add",rake:1,shock:1.2,swirl:-.6,obstacles:true},
- {mod:"particles",count:1,curl:1.6,scale:3.2,speed:.02,life:.05,size:1.1,shape:"mote",c1:[.3,.95,1],c2:[.7,.4,1],alpha:.22,blend:"add",rake:1.2,shock:.9,swirl:1.1,obstacles:true},
- {mod:"post",bloom:1.1,threshold:.7,exposure:.95,aberr:.9,grain:.03,vig:.45,trails:.55}]};
+/* OBSIDIAN = black volcanic glass: near-black void, knapped glass shards with thin violet edge glints, indigo aurora seams, low cavern haze. No grid, no cyan. Heavy layers only on high tiers. */
+var TIERS=["low","medium","high","ultra","max"], mob=Math.min(screen.width,screen.height)<820||/Android|iPhone|iPad/i.test(navigator.userAgent);
+try{if(!/[?&]tier=/.test(location.search)&&localStorage.getItem("tr_gl_v")!=="2"){localStorage.removeItem("tr_fxk_tier");localStorage.setItem("tr_gl_v","2")}}catch(e){}
+var cur=K.tier()||(mob?"medium":"high"); try{if(!K.tier())localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
+var lvl=TIERS.indexOf(cur), stack=[
+ {mod:"atmos",top:[.012,.008,.022],bottom:[.002,.001,.004],portal:.05,portalC:[.32,.12,.7],portalAt:[.5,.62],aurora:.12,auroraC:[.28,.14,.62],grid:0,horizon:.3,fog:lvl>0?.1:.06,fogC:[.07,.04,.12],vig:.75,grain:.015,touchGlow:.4,touchC:[.55,.35,.95]}];
+if(lvl>=2) stack.push({mod:"volume",steps:lvl>=3?36:22,density:.1,color:[.12,.08,.2],light:[.45,.25,.85],lightAt:[.5,.62],follow:true,lightPow:.7,ambient:[.004,.002,.01],low:.5});
+/* glass shards: dark smoky violet bodies catching a thin cool-white glint */
+stack.push({mod:"particles",count:1,curl:.9,scale:2.4,speed:.035,life:.03,size:lvl<2?2.4:3,shape:"spark",c1:[.78,.72,.95],c2:[.1,.06,.18],alpha:.5,blend:"add",glint:1.2,depth:.9,rake:1,shock:1.7,swirl:.3,spawn:"any",obstacles:true});
+/* indigo obsidian dust */
+stack.push({mod:"particles",count:lvl<2?.6:1,curl:1.4,scale:3,speed:.02,life:.05,size:1.1,shape:"mote",c1:[.34,.2,.7],c2:[.12,.06,.3],alpha:.2,blend:"add",rake:1.2,shock:1,swirl:1,obstacles:true});
+/* rare restrained gold embers from the coin (high+) */
+if(lvl>=2) stack.push({mod:"particles",count:.25,curl:.8,scale:1.8,speed:.03,drift:[0,.01],life:.07,size:1.4,shape:"streak",c1:[.95,.7,.3],c2:[.4,.15,.5],alpha:.22,blend:"add",rake:1,shock:1.2,swirl:-.6,obstacles:true});
+stack.push({mod:"post",bloom:lvl<1?.4:lvl<2?.6:.8,threshold:.78,exposure:.9,aberr:lvl>=3?.25:0,grain:.02,vig:.55,trails:lvl>=2?.35:0});
+K.themes.obsidian={stack:stack};
+var ui=$("ui");
 var TIERS=["low","medium","high","ultra","max"], ui=$("ui"); var cur=K.tier()||((Math.min(screen.width,screen.height)<820)?"high":"ultra");
 if(!K.tier()) try{localStorage.setItem("tr_fxk_tier",cur)}catch(e){}
-TIERS.forEach(function(t){var b=document.createElement("button");b.textContent=t[0].toUpperCase()+t.slice(1);b.setAttribute("aria-pressed",t===cur);b.onclick=function(){cur=t;K.setTier(t);[].forEach.call(ui.children,function(x){x.setAttribute("aria-pressed",x===b)})};ui.appendChild(b)});
+TIERS.forEach(function(t){var b=document.createElement("button");b.textContent=t[0].toUpperCase()+t.slice(1);b.setAttribute("aria-pressed",t===cur);b.onclick=function(){try{localStorage.setItem("tr_fxk_tier",t)}catch(e){}location.search="?tier="+t};ui.appendChild(b)});
 var chill=document.createElement("button");chill.textContent="Chill realm";chill.onclick=function(){mode=mode==="chill"?"intro":"chill";chill.setAttribute("aria-pressed",mode==="chill");if(mode==="intro")run()};ui.appendChild(chill);
 var re=document.createElement("button");re.textContent="Replay boom";re.onclick=function(){run()};ui.appendChild(re);
 /* ---------- audio: everything goes through an analyser; the analyser's bass drives the particles (sound -> physics) ---------- */
@@ -70,8 +78,7 @@ var beat=0;
 K.onFrame=function(dt){var e=couple?couple(dt):0;
  if(AC&&(mode==="chill"||AC.currentTime-T0>9)){beat-=dt;if(beat<=0){beat=6+Math.random()*3;padOn();boom(AC.currentTime+.02,.35)}}
  hueV*=Math.exp(-dt*1.5);hue+=dt*(8+hueV)+K.bass*30*dt;spinV*=Math.exp(-dt*.9);spin+=dt*(25+spinV);lift+=dt;
- document.querySelector("canvas")&&(document.querySelector("canvas").style.filter="hue-rotate("+(Math.sin(hue*.02)*35+hueV*.5)+"deg) saturate("+(1.1+K.bass*.8)+")");
- $("coin").style.transform="translateY("+(Math.sin(lift*.7)*8-K.bass*20)+"px) rotateY("+spin+"deg) rotateX("+(14*Math.sin(lift*.4))+"deg) scale("+(1+K.bass*.25)+")";
+  $("coin").style.transform="translateY("+(Math.sin(lift*.7)*8-K.bass*20)+"px) rotateY("+spin+"deg) rotateX("+(14*Math.sin(lift*.4))+"deg) scale("+(1+K.bass*.25)+")";
  var d=K.debug();$("stat").textContent=cur.toUpperCase()+" · "+d.w+"×"+d.h+" · "+(d.parts||[]).join(" ")+" · bass "+(K.bass).toFixed(2)};
 /* touch = shock at your finger + small boom (UI fires K.shock directly) */
 addEventListener("pointerdown",function(e){if(!AC||e.target.closest("#ui"))return;var x=e.clientX/innerWidth,y=1-e.clientY/innerHeight;K.shock(x,y,1.2);boom(AC.currentTime+.01,.5)});
