@@ -1,0 +1,2 @@
+Pages build stamp for the theme rooms (pushes from the Claude app do not start a Pages build; this commit, made through the owner's GitHub connection, does).
+2026-10-29 rooms v1 (Supercell) a70804c
