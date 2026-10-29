@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Titan Reliquary · Room</title>
+<link rel="stylesheet" href="room.css?v=1">
+<script>(function () { var w = (/[?&]w=([a-z]+)/.exec(location.search) || [])[1] || "supercell"; document.documentElement.dataset.atmo = w; })();</script>
+</head><body>
+<div id="touch" aria-label="The room. Drag to look around, pinch to move, tap to touch it."></div>
+<header id="head"><small>Theme room</small><b id="rname"></b></header>
+<div id="top"><button class="chip" id="snd" type="button" aria-pressed="true">Sound on</button><a class="chip" href="./" aria-label="All rooms">✕</a></div>
+<div id="hint"></div>
+<div id="dark" aria-hidden="true"></div>
+<div id="title" aria-hidden="true">TITAN RELIQUARY</div>
+<div id="stat"></div>
+<section id="panel" hidden aria-live="polite"></section>
+<nav id="dock" aria-label="Room controls">
+  <button class="chip" type="button" data-p="look" aria-pressed="false">Look</button>
+  <button class="chip" type="button" data-p="sound" aria-pressed="false">Sound</button>
+  <button class="chip" type="button" data-p="quality" aria-pressed="false">Quality</button>
+  <button class="chip" type="button" id="open">Opening</button>
+</nav>
+<div id="door"><div><small id="dtheme">Theme room</small><b id="dname"></b><p id="dtouch"></p>
+  <button class="chip" type="button" id="enter">Step inside</button><button class="chip" type="button" id="enter-open">Opening first</button></div></div>
+<script src="fx/kit.js?v=r1"></script><script src="fx/post.js?v=r1"></script>
+<script src="audio/scape/engine.js?v=r1"></script><script src="audio/scape/presets.js?v=r1"></script>
+<script src="room.js?v=1"></script>
+</body></html>

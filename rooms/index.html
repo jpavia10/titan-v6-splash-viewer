@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Titan Reliquary · Theme rooms</title>
+<link rel="stylesheet" href="room.css?v=1">
+<style>
+  html, body { overflow: auto; }
+  main { max-width: 760px; margin: 0 auto; padding: calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
+  h1 { font: 600 clamp(28px, 7vw, 44px)/1.1 "Fraunces", Georgia, serif; margin: 6px 0 10px; }
+  main > p { color: var(--ink-2); max-width: 56ch; margin: 0 0 22px; }
+  .eyebrow { letter-spacing: .3em; text-transform: uppercase; font-size: 11px; color: var(--gold); }
+  .rooms { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .card { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 20px; padding: 18px; min-height: 150px;
+    background: linear-gradient(160deg, rgba(40, 36, 44, .7), rgba(12, 11, 14, .85)); position: relative; overflow: hidden; }
+  .card b { display: block; font: 600 22px/1.15 "Fraunces", Georgia, serif; margin: 6px 0 6px; }
+  .card span { color: var(--ink-2); font-size: 14px; }
+  .card em { position: absolute; right: 14px; top: 14px; font-style: normal; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+  .card.soon { opacity: .55; pointer-events: none; }
+  .card:focus-visible { outline: 2px solid var(--hot); outline-offset: 3px; }
+  footer { margin-top: 26px; font-size: 13px; color: var(--ink-2); }
+  footer a { color: var(--gold); }
+</style>
+</head><body>
+<main>
+  <div class="eyebrow">Titan Reliquary · test site</div>
+  <h1>Theme rooms</h1>
+  <p>Each theme's world without the collection in front of it: look around, move closer, touch it, play with its light and its sound.
+    The opening plays in the same world. Built on the app's own engine; nothing here changes the app until you say so.</p>
+  <div class="rooms">
+    <a class="card" href="room.html?w=supercell"><em>Room v1</em><b>Supercell</b><span>The plains under a rotating storm at dusk. Tap the sky for a strike; the thunder comes after it.</span></a>
+    <a class="card soon" href="#"><em>Next</em><b>Tourbillon</b><span>Inside the watch movement: lean in to the cage.</span></a>
+    <a class="card soon" href="#"><em>Next</em><b>Silver Screen</b><span>The picture palace from the stalls.</span></a>
+    <a class="card soon" href="#"><em>Next</em><b>Obsidian Sun</b><span>From Grok's black-glass point (gold-live).</span></a>
+  </div>
+  <footer>Earlier test pages on this site: <a href="../gold-live/">Grok's live Obsidian opening</a> · <a href="../">Gemini v6 viewer (rejected)</a></footer>
+</main>
+</body></html>

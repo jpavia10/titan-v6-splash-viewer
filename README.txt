@@ -1,3 +1,7 @@
+THEME ROOMS (Claude, 2026-10-29): rooms/ is the test site for the theme rooms and the openings on each theme's own engine
+  (owner rule 12 in the app repo). Open rooms/ on the phone. The world code in rooms/fx and rooms/audio is copied from the app
+  by tools/rooms/sync_test_site.sh in jpavia10/titan-reliquary-preview; edit it there, not here.
+
 TITAN RELIQUARY — GEMINI V6 SPLASH VIEWER (TEMPORARY)
 STATUS: REJECTED package. Review only. Do NOT merge or ship.
 
