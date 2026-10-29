@@ -1,6 +1,7 @@
-THEME ROOMS (Claude, 2026-10-29): rooms/ is the test site for the theme rooms and the openings on each theme's own engine
-  (owner rule 12 in the app repo). Open rooms/ on the phone. The world code in rooms/fx and rooms/audio is copied from the app
-  by tools/rooms/sync_test_site.sh in jpavia10/titan-reliquary-preview; edit it there, not here.
+TITAN TEST SERVER (Joseph, 2026-10-29: "That repo is my test server for any features"). index.html is the hub.
+  rooms/   THEME ROOMS (Claude): each theme's own world on the app's engine. Everything in rooms/ except DEPLOY_STAMP.txt is generated
+           from the app by tools/rooms/sync_test_site.sh in jpavia10/titan-reliquary-preview; edit it there, not here.
+  gold*/   Grok's Obsidian openings (reviewed). theater.html + v6.html: Gemini's v6 intros (rejected; notes below).
 
 TITAN RELIQUARY — GEMINI V6 SPLASH VIEWER (TEMPORARY)
 STATUS: REJECTED package. Review only. Do NOT merge or ship.
@@ -13,7 +14,7 @@ HOW TO OPEN
   then open http://localhost:8765/
 
 FILES
-  index.html        Hub: reject banner + reasons, 5 preview videos (keys 1-5), theater link, 390x844 phone frame
+  v6.html           Hub: reject banner + reasons, 5 preview videos (keys 1-5), theater link, 390x844 phone frame
   theater.html      Gemini's WebGL theater, all 54 intros, picker. Offline: Tailwind CDN + Google Fonts removed
   tw-lite.css       Small local stand-in for Tailwind so theater stays laid out offline
   media/*.mp4       Gemini preview clips: obsidian, colossus, tourbillon, silverscreen, quad

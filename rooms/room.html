@@ -1,28 +1,20 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex">
-<title>Titan Reliquary · Room</title>
-<link rel="stylesheet" href="room.css?v=1">
-<script>(function () { var w = (/[?&]w=([a-z]+)/.exec(location.search) || [])[1] || "supercell"; document.documentElement.dataset.atmo = w; })();</script>
-</head><body>
-<div id="touch" aria-label="The room. Drag to look around, pinch to move, tap to touch it."></div>
-<header id="head"><small>Theme room</small><b id="rname"></b></header>
-<div id="top"><button class="chip" id="snd" type="button" aria-pressed="true">Sound on</button><a class="chip" href="./" aria-label="All rooms">✕</a></div>
-<div id="hint"></div>
-<div id="dark" aria-hidden="true"></div>
-<div id="title" aria-hidden="true">TITAN RELIQUARY</div>
-<div id="stat"></div>
-<section id="panel" hidden aria-live="polite"></section>
-<nav id="dock" aria-label="Room controls">
-  <button class="chip" type="button" data-p="look" aria-pressed="false">Look</button>
-  <button class="chip" type="button" data-p="sound" aria-pressed="false">Sound</button>
-  <button class="chip" type="button" data-p="quality" aria-pressed="false">Quality</button>
-  <button class="chip" type="button" id="open">Opening</button>
-</nav>
-<div id="door"><div><small id="dtheme">Theme room</small><b id="dname"></b><p id="dtouch"></p>
-  <button class="chip" type="button" id="enter">Step inside</button><button class="chip" type="button" id="enter-open">Opening first</button></div></div>
-<script src="fx/kit.js?v=r1"></script><script src="fx/post.js?v=r1"></script>
-<script src="audio/scape/engine.js?v=r1"></script><script src="audio/scape/presets.js?v=r1"></script>
-<script src="room.js?v=1"></script>
-</body></html>
+<!doctype html><html lang="en" data-motion="full"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Theme room</title><meta name="robots" content="noindex">
+<script>(function () { var w = (/[?&]w=([a-z0-9]+)/.exec(location.search) || [])[1] || "supercell"; document.documentElement.dataset.atmo = w; })();</script>
+<link rel="stylesheet" href="styles/room.css"><style>html,body{margin:0;height:100%%;background:#000;overflow:hidden}
+#wait{position:fixed;inset:0;display:grid;place-items:center;color:#cfc8b8;font:15px system-ui,sans-serif}</style></head>
+<body><p id="wait">Loading the world...</p>
+<script src="wings/quality.js"></script><script src="wings/themes/manifest.js"></script>
+<script src="fx/kit.js"></script><script src="fx/atmos.js"></script><script src="fx/particles-gpu.js"></script><script src="fx/fluid.js"></script><script src="fx/post.js"></script><script src="fx/volume.js"></script><script src="fx/metal.js"></script><script src="fx/rd.js"></script><script src="fx/themes.js"></script>
+<script src="audio/scape/engine.js"></script><script src="audio/scape/presets.js"></script><script src="wings/room.js"></script>
+<script>(function () {
+  var id = document.documentElement.dataset.atmo, K = window.TitanFXK, opening = /[?&]opening\b/.test(location.search), t0 = Date.now();
+  (function wait() {
+    var d = K && K.debug(); if (!(d && d.id === id && d.frames > 1)) { if (Date.now() - t0 < 30000) return setTimeout(wait, 100); document.getElementById("wait").textContent = "This world did not start here."; return; }
+    document.getElementById("wait").remove();
+    TitanRoom.open().then(function (c) {
+      if (opening && K.room(id) && K.room(id).opening) setTimeout(function () { var b = [].slice.call(c.el.querySelectorAll(".troom-bar button")).filter(function (x) { return x.textContent === "Opening"; })[0]; if (b) { b.click(); var p = c.el.querySelector(".troom-btns button"); if (p) p.click(); } }, 300);
+      (function watch() { if (TitanRoom.current()) return setTimeout(watch, 300); location.href = "./"; })();
+    });
+  })();
+})();</script></body></html>

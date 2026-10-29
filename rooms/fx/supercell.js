@@ -12,6 +12,7 @@
 (function () {
   "use strict";
   var K = window.TitanFXK; if (!K) return;
+  var look = K.look || function (id, def) { return def; };   // an older cached kit has no world contract: the backdrop as before
   function tier() {
     try { if (window.TitanQuality && TitanQuality.tier) { var q = String(TitanQuality.tier()).toLowerCase(); if (q === "ultra") q = "max"; if (/^(low|medium|high|max)$/.test(q)) return q; } } catch (e) { /* ignore */ }
     try { var v = (localStorage.getItem("tr_quality") || "").toLowerCase(); if (v === "ultra") v = "max"; if (/^(low|medium|high|max)$/.test(v)) return v; if (localStorage.getItem("tr_lite_v1") === "1") return "low"; } catch (e) { /* ignore */ }
@@ -154,21 +155,21 @@
     var F = new Float32Array(16), UB = new Float32Array(8), UBI = new Float32Array(8), trOff = 0;
 
     return { name: "supercell",
-      step: function (c) { tNow = c.t; Aspect = c.w / c.h; var P = c.ptr, v = c.view || {}; B = basis(v); trOff += (K.look("spin", 1) - 1) * c.dt;
+      step: function (c) { tNow = c.t; Aspect = c.w / c.h; var P = c.ptr, v = c.view || {}; B = basis(v); trOff += (look("spin", 1) - 1) * c.dt;
         if (P.tap !== seen) { seen = P.tap; strike(P.tx, 1.3);
           try { dispatchEvent(new CustomEvent("titan:fx", { detail: { type: "lightning", dist: .7, x: P.tx, power: 1, from: "scene" } })); } catch (e) { /* ignore */ } }
-        var rate = K.look("lightning", 1);
+        var rate = look("lightning", 1);
         if (c.t - lastScape > 25 && c.t > nextOwn && rate > 0) { if (Math.random() < .28) strike(null, .9); else inCloud(null, .8 + Math.random() * .5); nextOwn = c.t + (3 + Math.random() * 7) / rate; } },
       draw: function (c) {
         var A = c.w / c.h, C = center(A), w = Math.max(2, Math.round(c.w * cfg[2])), h = Math.max(2, Math.round(c.h * cfg[2])); mk(w, h);
         var sum = 0; F.fill(0); for (var i = 0; i < flashes.length; i++) { var f = flashes[i], I = env(c.t - f.t) * f.p; F.set([f.P[0], f.P[1], f.P[2], I], i * 4); sum += I; }
         UB.fill(0); UBI.fill(0); for (i = 0; i < bolts.length; i++) { var b = bolts[i], bi = env(c.t - b.t) * b.p, ta = proj(b.top, A), gb = proj(b.gnd, A); if (!ta || !gb) continue;
           UB.set([ta[0], ta[1], gb[0], Math.max(gb[1], .02)], i * 4); UBI.set([bi, b.seed, 0, 0], i * 4); }
-        var room = c.view && c.view.mode === "room", sway = room ? [0, 0] : [(c.ptr.x - .5), (c.ptr.y - .5)], sun = K.look("sun", 1);
+        var room = c.view && c.view.mode === "room", sway = room ? [0, 0] : [(c.ptr.x - .5), (c.ptr.y - .5)], sun = look("sun", 1);
         function cam(u) { gl.uniform3f(u.uCO, O[0], O[1], O[2]); gl.uniform3f(u.uCF, B.f[0], B.f[1], B.f[2]); gl.uniform3f(u.uCR, B.r[0], B.r[1], B.r[2]); gl.uniform3f(u.uCU, B.u[0], B.u[1], B.u[2]); gl.uniform1f(u.uFov, CAM.fov); }
         gl.bindFramebuffer(gl.FRAMEBUFFER, rt.f); gl.viewport(0, 0, w, h); gl.disable(gl.BLEND); gl.useProgram(pv.p); var u = pv.u;
         gl.uniform2f(u.uRes, w, h); gl.uniform1f(u.uT, c.t); gl.uniform1f(u.uA, A); gl.uniform3f(u.uC, C[0], C[1], C[2]); gl.uniform4fv(u.uF, F); gl.uniform2f(u.uSway, sway[0], sway[1]);
-        cam(u); gl.uniform1f(u.uTr, c.t + trOff); gl.uniform1f(u.uRain, K.look("rain", 1)); gl.uniform1f(u.uSun, sun);
+        cam(u); gl.uniform1f(u.uTr, c.t + trOff); gl.uniform1f(u.uRain, look("rain", 1)); gl.uniform1f(u.uSun, sun);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         K.bindTarget(); gl.disable(gl.BLEND); gl.useProgram(pc.p); u = pc.u;
         gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, rt.t); gl.uniform1i(u.uV, 0);
@@ -176,7 +177,9 @@
         cam(u); gl.uniform1f(u.uSun, sun);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
       },
-      debug: function () { return { tier: T, steps: cfg[0], res: cfg[2], flashes: flashes.length, bolts: bolts.length }; },
+      debug: function () { return { tier: T, steps: cfg[0], res: cfg[2], flashes: flashes.length, bolts: bolts.length,
+        cam: O.map(function (x) { return +x.toFixed(3); }).concat(B ? B.f.map(function (x) { return +x.toFixed(3); }) : []),
+        look: { rain: look("rain", 1), lightning: look("lightning", 1), spin: look("spin", 1), sun: look("sun", 1) } }; },
       flash: function (x, ground) { if (ground) strike(x, 1.2); else inCloud(x, 1.2); },     // for tests and the intro hand-over
       dispose: function () { removeEventListener("titan:scape", onScape); if (rt) { gl.deleteTexture(rt.t); gl.deleteFramebuffer(rt.f); } gl.deleteProgram(pv.p); gl.deleteProgram(pc.p); } };
   });

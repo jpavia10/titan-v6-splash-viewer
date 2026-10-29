@@ -15,6 +15,25 @@
      the view, up = metres) and look = its named controls (each world lists them in K.themes[id].room.look; a missing one = its default). */
   K.view = K.view || { mode: "backdrop", yaw: 0, pitch: 0, move: 0, up: 0, look: {} };
   K.look = function (id, def) { var v = K.view.look && K.view.look[id]; return v == null ? def : v; };
+  /* The view is written only through setView: a mode outside MODES is ignored, a number that is not finite is ignored, the camera and
+     every look control are clamped to the world's room limits (K.themes[id].room), unknown look ids are dropped. A world without a room
+     keeps the backdrop camera. Nothing here can throw on bad input: the page keeps running with the last good view. */
+  K.MODES = ["backdrop", "opening", "room"];
+  K.room = function (id) { var c = K.themes[id || (active && active.id) || root.dataset.atmo]; return (c && c.room) || null; };
+  function num(x) { return typeof x === "number" && isFinite(x); }
+  function clamp(x, r) { return r && r.length === 2 ? Math.min(Math.max(x, Math.min(r[0], r[1])), Math.max(r[0], r[1])) : x; }
+  K.setView = function (v) {
+    var cur = K.view, R = K.room(), next = { mode: cur.mode, yaw: cur.yaw, pitch: cur.pitch, move: cur.move, up: cur.up, look: {} };
+    for (var k in cur.look) next.look[k] = cur.look[k];
+    if (v && typeof v === "object") {
+      if (typeof v.mode === "string" && K.MODES.indexOf(v.mode) >= 0) next.mode = v.mode;
+      ["yaw", "pitch", "move", "up"].forEach(function (k) { if (num(v[k])) next[k] = R ? clamp(v[k], R[k]) : 0; });
+      if (v.look && typeof v.look === "object") (R && R.look || []).forEach(function (c) { if (num(v.look[c.id])) next.look[c.id] = clamp(v.look[c.id], [c.min, c.max]); });
+    }
+    K.view = next; redraw(); return K.view;
+  };
+  K.resetView = function () { K.view = { mode: "backdrop", yaw: 0, pitch: 0, move: 0, up: 0, look: {} }; redraw(); return K.view; };
+  K.frames = 0;
   var root = document.documentElement, cv = null, gl = null, active = null, raf = 0, last = 0, t0 = performance.now();
   var lite = function () { try { return localStorage.getItem("tr_lite_v1") === "1"; } catch (e) { return false; } };   /* owner rule: assume a capable GPU; only an explicit Lite choice scales down */
   var still = function () { var m = root.dataset.motion; return m === "calm" || m === "off" || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches); };
@@ -92,6 +111,8 @@
   }
   K.bindTarget = function () { var useH = active && active.post && hdr; gl.bindFramebuffer(gl.FRAMEBUFFER, useH ? hdr.f : null); gl.viewport(0, 0, cv.width, cv.height); };
   function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; }
+  /* a view change while the loop is not running (Motion Calm / Off, a hidden tab) draws one new still frame */
+  function redraw() { if (active && !raf && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } }
   function teardown() { stop(); if (active) active.parts.forEach(function (p) { p.dispose && p.dispose(); }); active = null; if (cv) cv.style.opacity = "0"; root.removeAttribute("data-fxk"); }
   function frame(now) {
     raf = 0; if (!active) return;
@@ -102,7 +123,7 @@
     if (!still() && !document.hidden) raf = requestAnimationFrame(frame);
   }
   function draw(t, dt) {
-    scanObs(performance.now()); size();
+    scanObs(performance.now()); size(); K.frames++;
     gl.viewport(0, 0, cv.width, cv.height); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     var ctx = { t: t, dt: dt, w: cv.width, h: cv.height, q: Q.q, lite: lite(), still: still(), ptr: ptr, obs: obs, obsN: obsN, cfg: active.cfg, id: active.id, view: K.view };
@@ -131,7 +152,14 @@
       if (lazyDone[list[i]]) return next(i + 1);
       var s = document.createElement("script"); s.src = list[i] + lazyV;
       s.onload = function () { lazyDone[list[i]] = 1; next(i + 1); }; s.onerror = function () { lazyBusy[id] = 0; }; document.head.appendChild(s); })(0); }
-  K.apply = apply; K.debug = function () { return { id: active && active.id, q: Q.q, scale: Q.scale, w: cv && cv.width, h: cv && cv.height, parts: active ? active.parts.map(function (p) { return p.name + (p.count ? ":" + p.count() : ""); }) : [] }; };
+  K.apply = apply;
+  /* tierName: the one quality setting (wings/quality.js TitanQuality) by name; the worlds read it themselves, this is what they were given.
+     (K.tier() is the shared scene module's quality factor, a number: fx/scenes-nms.js) */
+  K.tierName = function () { try { var q = window.TitanQuality && TitanQuality.tier && String(TitanQuality.tier()).toLowerCase(); if (/^(low|medium|high|ultra|max)$/.test(q)) return q; } catch (e) { /* ignore */ } return "high"; };
+  K.debug = function () { return { id: active && active.id, q: Q.q, scale: Q.scale, w: cv && cv.width, h: cv && cv.height, tier: K.tierName(), frames: K.frames, loop: raf ? 1 : 0,
+    canvases: document.querySelectorAll("canvas#fxk").length, view: JSON.parse(JSON.stringify(K.view)),
+    parts: active ? active.parts.map(function (p) { return p.name + (p.count ? ":" + p.count() : ""); }) : [],
+    worlds: active ? active.parts.filter(function (p) { return p.debug; }).map(function (p) { var d = {}; try { d = p.debug() || {}; } catch (e) { d = { error: String(e) }; } d.name = p.name; return d; }) : [] }; };
   function start() { apply(); new MutationObserver(function () { apply(); }).observe(root, { attributes: true, attributeFilter: ["data-atmo", "data-motion", "data-ui"] });
     document.addEventListener("visibilitychange", function () { if (!document.hidden && active && !raf) { last = 0; raf = requestAnimationFrame(frame); } });
     addEventListener("resize", function () { if (active && !raf) raf = requestAnimationFrame(frame); }); }

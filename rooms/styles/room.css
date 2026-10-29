@@ -1,0 +1,16 @@
+/* styles/room.css: the opening played on the theme's own world (.ts-engine on the splash, wings/room.js) and the Scene Studio entry.
+   The room itself is styled in styles/room-shell.css, loaded with it. */
+
+/* the splash goes transparent over the live world while the app waits hidden; the app fades in over the same world at the end */
+html.ts-engine body > :not(#tr-splash):not(#fxk):not(#titan-fx) { opacity: 0 !important; }
+html.ts-engine-fade body > :not(#tr-splash):not(#fxk):not(#titan-fx) { transition: opacity .9s cubic-bezier(.4, 0, .2, 1); }
+#tr-splash.ts-engine { background: transparent; }
+#tr-splash.ts-engine > :not(.ts-engine-dark):not(.ts-engine-title):not(.ts-skip):not(.ts-sound) { display: none; }
+.ts-engine-dark { position: absolute; inset: 0; background: #040406; opacity: 1; transition: opacity 2.2s cubic-bezier(.4, 0, .2, 1); pointer-events: none; }
+.ts-engine-title, .troom-title { position: absolute; left: 0; right: 0; top: 30%; text-align: center; pointer-events: none; opacity: 0;
+  font: 600 clamp(30px, 9vw, 72px)/1.05 "Fraunces", Georgia, serif; letter-spacing: .26em; color: #fff3da;
+  text-shadow: 0 0 24px rgba(200, 215, 255, .5), 0 2px 18px rgba(0, 0, 0, .75); transition: opacity 1.4s, letter-spacing 3.5s; }
+.ts-engine-title.on, .troom-title.on { opacity: 1; letter-spacing: .14em; }
+
+/* the entry in Scene Studio */
+.ss-roombtn { margin-left: 6px; }

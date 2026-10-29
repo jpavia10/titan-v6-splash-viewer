@@ -1,38 +1,28 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex">
-<title>Titan Reliquary · Theme rooms</title>
-<link rel="stylesheet" href="room.css?v=1">
-<style>
-  html, body { overflow: auto; }
-  main { max-width: 760px; margin: 0 auto; padding: calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
-  h1 { font: 600 clamp(28px, 7vw, 44px)/1.1 "Fraunces", Georgia, serif; margin: 6px 0 10px; }
-  main > p { color: var(--ink-2); max-width: 56ch; margin: 0 0 22px; }
-  .eyebrow { letter-spacing: .3em; text-transform: uppercase; font-size: 11px; color: var(--gold); }
-  .rooms { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
-  .card { display: block; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 20px; padding: 18px; min-height: 150px;
-    background: linear-gradient(160deg, rgba(40, 36, 44, .7), rgba(12, 11, 14, .85)); position: relative; overflow: hidden; }
-  .card b { display: block; font: 600 22px/1.15 "Fraunces", Georgia, serif; margin: 6px 0 6px; }
-  .card span { color: var(--ink-2); font-size: 14px; }
-  .card em { position: absolute; right: 14px; top: 14px; font-style: normal; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
-  .card.soon { opacity: .55; pointer-events: none; }
-  .card:focus-visible { outline: 2px solid var(--hot); outline-offset: 3px; }
-  footer { margin-top: 26px; font-size: 13px; color: var(--ink-2); }
-  footer a { color: var(--gold); }
-</style>
-</head><body>
-<main>
-  <div class="eyebrow">Titan Reliquary · test site</div>
-  <h1>Theme rooms</h1>
-  <p>Each theme's world without the collection in front of it: look around, move closer, touch it, play with its light and its sound.
-    The opening plays in the same world. Built on the app's own engine; nothing here changes the app until you say so.</p>
-  <div class="rooms">
-    <a class="card" href="room.html?w=supercell"><em>Room v1</em><b>Supercell</b><span>The plains under a rotating storm at dusk. Tap the sky for a strike; the thunder comes after it.</span></a>
-    <a class="card soon" href="#"><em>Next</em><b>Tourbillon</b><span>Inside the watch movement: lean in to the cage.</span></a>
-    <a class="card soon" href="#"><em>Next</em><b>Silver Screen</b><span>The picture palace from the stalls.</span></a>
-    <a class="card soon" href="#"><em>Next</em><b>Obsidian Sun</b><span>From Grok's black-glass point (gold-live).</span></a>
-  </div>
-  <footer>Earlier test pages on this site: <a href="../gold-live/">Grok's live Obsidian opening</a> · <a href="../">Gemini v6 viewer (rejected)</a></footer>
-</main>
-</body></html>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Theme rooms</title><meta name="robots" content="noindex">
+<style>:root{color-scheme:dark}body{margin:0;background:#07080c;color:#e8e6df;font:15px/1.4 system-ui,-apple-system,sans-serif}
+main{max-width:760px;margin:0 auto;padding:18px 16px 48px}h1{font:600 26px/1.15 Georgia,serif;margin:8px 0 6px}p{color:#b9b6ad;margin:0 0 16px}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.c{display:block;padding:14px 16px;border-radius:14px;background:#11131c;border:1px solid #23273a;color:inherit;text-decoration:none}
+.c b{display:block;font:600 17px Georgia,serif}.c span{display:block;color:#f3d48a;font-size:13.5px;margin:2px 0 6px}.c i{display:block;font-style:normal;color:#9a978f;font-size:13px}
+.o{display:inline-block;margin-top:10px;padding:8px 12px;border-radius:18px;background:#f3d48a;color:#15120c;text-decoration:none;font-weight:600;font-size:13px}</style></head>
+<body><main><h1>Theme rooms</h1><p>Each theme's own world on the app's engine, away from the collection. Drag to look around, pinch to move,
+tap the world, tilt the phone; Look, Sound and Opening at the bottom. Generated from the app (18 worlds with a room); the same room is in
+the app under Scene Studio &gt; Step inside. <a href="../" style="color:#f3d48a">Test server home</a></p><div class="g"><a class="c" href="room.html?w=canopy"><b>Cloud Forest</b><span>The montane cloud forest basin</span><i>Tap the clearing: creates ripples in the rainwater basin and scatters nearby fireflies.</i><a class="o" href="room.html?w=canopy&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=darkroom"><b>Darkroom</b><span>The tray under the safelight</span><i>Tap the developer bath to agitate the fluid and ripple the safelight reflections.</i><a class="o" href="room.html?w=darkroom&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=ferro"><b>Ferrofluid</b><span>The magnetic mirror pool</span><i>Hold to charge the magnetic field and raise a crown of spikes; let go to splash.</i></a>
+<a class="c" href="room.html?w=glasshouse"><b>The Glasshouse</b><span>The Victorian conservatory dome</span><i>Tap the conservatory: a ripple of raindrops across the glass dome.</i><a class="o" href="room.html?w=glasshouse&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=horizon"><b>Event Horizon</b><span>At the event horizon</span><i>Tap: a flare runs around the accretion disk; drag orbits the camera, hold leans in toward the horizon.</i><a class="o" href="room.html?w=horizon&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=kintsugi"><b>Kintsugi</b><span>The raku vessel</span><i>Tap the vessel: a star of new fractures radiates out, then gold runs in to seal them.</i><a class="o" href="room.html?w=kintsugi&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=lightwell"><b>Light Well</b><span>The Concrete Rotunda</span><i>Tap the concrete or the coin: a soft ripple across the light well.</i><a class="o" href="room.html?w=lightwell&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=lumen"><b>Lumen Circuit</b><span>On the grid</span><i>Tap the grid to launch your light runner.</i><a class="o" href="room.html?w=lumen&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=nocturne"><b>Nocturne</b><span>The candlelit recital salon</span><i>A tap on the soundboard creates a ripple of vibration and a golden glow.</i><a class="o" href="room.html?w=nocturne&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=obsidian"><b>Obsidian Sun</b><span>The Obsidian Sun Stone</span><i>Tap the mirror surface: ripples the obsidian glass and triggers a pulse wave.</i><a class="o" href="room.html?w=obsidian&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=orbit"><b>Low Orbit</b><span>The Cupola window</span><i>Tap the window: a ripple across the cupola glass.</i><a class="o" href="room.html?w=orbit&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=rift"><b>Rift Garage</b><span>The garage laboratory</span><i>Tap anywhere to pop a small pocket rift under your finger; press and hold to charge the main rift.</i><a class="o" href="room.html?w=rift&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=sahel"><b>Sahel Futurism</b><span>The Saharan Solar Court</span><i>Tap the astrolabe: a ripple across the solar court.</i><a class="o" href="room.html?w=sahel&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=saltflat"><b>Salt Mirror</b><span>The Altiplano Mirror</span><i>A tap on the flooded surface sends out a ripple ring from that point.</i><a class="o" href="room.html?w=saltflat&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=silverscreen"><b>Silver Screen</b><span>The picture palace stalls</span><i>Tap the projector beam to swirl dust motes in the haze.</i><a class="o" href="room.html?w=silverscreen&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=supercell"><b>Supercell</b><span>The plains under the storm</span><i>Tap the sky: a ground strike where you tapped, and its thunder.</i><a class="o" href="room.html?w=supercell&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=tourbillon"><b>Tourbillon</b><span>Inside the caliber</span><i>Tap to wind the movement; press and hold to sound the minute repeater.</i><a class="o" href="room.html?w=tourbillon&amp;opening">Play its opening</a></a>
+<a class="c" href="room.html?w=zen"><b>Zen Garden</b><span>The dry garden courtyard</span><i>A tap on the gravel creates a ripple of focus and light.</i><a class="o" href="room.html?w=zen&amp;opening">Play its opening</a></a></div></main></body></html>

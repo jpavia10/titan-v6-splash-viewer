@@ -1,0 +1,456 @@
+{
+ "events": {
+  "bowl": {
+   "ch": 2,
+   "gainDb": -6.1,
+   "m4a": 217919,
+   "sec": 26.5,
+   "segs": [
+    [
+     0.0,
+     26.0
+    ]
+   ],
+   "src": "things/singing-bowl.mp3",
+   "webm": 255199
+  },
+  "clank": {
+   "ch": 2,
+   "gainDb": 11.3,
+   "m4a": 90472,
+   "sec": 12.4,
+   "segs": [
+    [
+     0.0,
+     2.6
+    ],
+    [
+     3.1,
+     2.6
+    ],
+    [
+     6.2,
+     2.6
+    ],
+    [
+     9.3,
+     2.6
+    ]
+   ],
+   "src": "things/slide-projector.mp3",
+   "webm": 113260
+  },
+  "creak": {
+   "ch": 2,
+   "gainDb": 9.8,
+   "m4a": 154900,
+   "sec": 20.5,
+   "segs": [
+    [
+     0.0,
+     3.6
+    ],
+    [
+     4.1,
+     3.6
+    ],
+    [
+     8.2,
+     3.6
+    ],
+    [
+     12.3,
+     3.6
+    ],
+    [
+     16.4,
+     3.6
+    ]
+   ],
+   "src": "transport/sailboat.mp3",
+   "webm": 183491
+  },
+  "owl": {
+   "ch": 1,
+   "gainDb": 10.5,
+   "m4a": 34991,
+   "sec": 7.6,
+   "segs": [
+    [
+     0.0,
+     3.4
+    ],
+    [
+     3.9,
+     3.2
+    ]
+   ],
+   "src": "animals/owl.mp3",
+   "webm": 42850
+  },
+  "pages": {
+   "ch": 2,
+   "gainDb": 10.1,
+   "m4a": 83669,
+   "sec": 11.3,
+   "segs": [
+    [
+     0.0,
+     3.2
+    ],
+    [
+     3.7,
+     3.2
+    ],
+    [
+     7.4,
+     3.4
+    ]
+   ],
+   "src": "things/paper.mp3",
+   "webm": 89876
+  },
+  "thunder": {
+   "ch": 2,
+   "gainDb": 1.8,
+   "m4a": 373157,
+   "sec": 46.5,
+   "segs": [
+    [
+     0.0,
+     15.0
+    ],
+    [
+     15.5,
+     15.0
+    ],
+    [
+     31.0,
+     15.0
+    ]
+   ],
+   "src": "rain/thunder.mp3",
+   "webm": 394329
+  },
+  "whale": {
+   "ch": 2,
+   "gainDb": -0.8,
+   "m4a": 214718,
+   "sec": 26.5,
+   "segs": [
+    [
+     0.0,
+     26.0
+    ]
+   ],
+   "src": "animals/whale.mp3",
+   "webm": 307752
+  }
+ },
+ "loops": {
+  "birds": {
+   "ch": 2,
+   "gainDb": 2.0,
+   "m4a": 329638,
+   "sec": 40.0,
+   "src": "animals/birds.mp3",
+   "webm": 485347
+  },
+  "brown": {
+   "ch": 1,
+   "gainDb": 4.7,
+   "m4a": 40739,
+   "sec": 7.61,
+   "src": "noise/brown-noise.wav",
+   "webm": 43863
+  },
+  "cafe": {
+   "ch": 2,
+   "gainDb": 3.2,
+   "m4a": 329525,
+   "sec": 40.0,
+   "src": "places/cafe.mp3",
+   "webm": 294401
+  },
+  "chimes": {
+   "ch": 2,
+   "gainDb": 4.3,
+   "m4a": 334294,
+   "sec": 40.0,
+   "src": "things/wind-chimes.mp3",
+   "webm": 579498
+  },
+  "city": {
+   "ch": 2,
+   "gainDb": 9.3,
+   "m4a": 329454,
+   "sec": 40.0,
+   "src": "urban/busy-street.mp3",
+   "webm": 384798
+  },
+  "clock": {
+   "ch": 1,
+   "gainDb": 18.4,
+   "m4a": 36261,
+   "sec": 14.0,
+   "src": "things/clock.mp3",
+   "webm": 106042
+  },
+  "club": {
+   "ch": 2,
+   "gainDb": 10.4,
+   "m4a": 329819,
+   "sec": 40.0,
+   "src": "places/crowded-bar.mp3",
+   "webm": 397680
+  },
+  "crickets": {
+   "ch": 2,
+   "gainDb": 20.0,
+   "m4a": 329799,
+   "sec": 40.0,
+   "src": "animals/crickets.mp3",
+   "webm": 574345
+  },
+  "crowd": {
+   "ch": 2,
+   "gainDb": 14.1,
+   "m4a": 329482,
+   "sec": 40.0,
+   "src": "urban/crowd.mp3",
+   "webm": 294299
+  },
+  "drips": {
+   "ch": 2,
+   "gainDb": 14.7,
+   "m4a": 327654,
+   "sec": 40.0,
+   "src": "nature/droplets.mp3",
+   "webm": 436593
+  },
+  "fire": {
+   "ch": 2,
+   "gainDb": 19.4,
+   "m4a": 331738,
+   "sec": 40.0,
+   "src": "nature/campfire.mp3",
+   "webm": 421116
+  },
+  "frogs": {
+   "ch": 2,
+   "gainDb": -1.0,
+   "m4a": 335260,
+   "sec": 40.0,
+   "src": "animals/frog.mp3",
+   "webm": 425343
+  },
+  "gulls": {
+   "ch": 1,
+   "gainDb": 10.5,
+   "m4a": 210600,
+   "sec": 40.0,
+   "src": "animals/seagulls.mp3",
+   "webm": 223727
+  },
+  "hall": {
+   "ch": 1,
+   "gainDb": 15.1,
+   "m4a": 210554,
+   "sec": 40.0,
+   "src": "places/church.mp3",
+   "webm": 223414
+  },
+  "keys": {
+   "ch": 2,
+   "gainDb": 7.3,
+   "m4a": 87159,
+   "sec": 10.25,
+   "src": "things/keyboard.mp3",
+   "webm": 104502
+  },
+  "labHum": {
+   "ch": 2,
+   "gainDb": 2.1,
+   "m4a": 157470,
+   "sec": 18.83,
+   "src": "places/laboratory.mp3",
+   "webm": 244013
+  },
+  "leaves": {
+   "ch": 2,
+   "gainDb": 20.0,
+   "m4a": 324877,
+   "sec": 39.22,
+   "src": "rain/rain-on-leaves.mp3",
+   "webm": 434980
+  },
+  "library": {
+   "ch": 2,
+   "gainDb": 20.0,
+   "m4a": 329625,
+   "sec": 40.0,
+   "src": "places/library.mp3",
+   "webm": 352062
+  },
+  "pink": {
+   "ch": 2,
+   "gainDb": -5.3,
+   "m4a": 63419,
+   "sec": 7.61,
+   "src": "noise/pink-noise.wav",
+   "webm": 54816
+  },
+  "rainHeavy": {
+   "ch": 2,
+   "gainDb": -0.5,
+   "m4a": 160126,
+   "sec": 19.39,
+   "src": "rain/heavy-rain.mp3",
+   "webm": 181180
+  },
+  "rainLight": {
+   "ch": 2,
+   "gainDb": 9.8,
+   "m4a": 331108,
+   "sec": 40.0,
+   "src": "rain/light-rain.mp3",
+   "webm": 367567
+  },
+  "rainUmbrella": {
+   "ch": 2,
+   "gainDb": 14.4,
+   "m4a": 218307,
+   "sec": 24.15,
+   "src": "rain/rain-on-umbrella.mp3",
+   "webm": 338143
+  },
+  "rainWindow": {
+   "ch": 2,
+   "gainDb": -3.5,
+   "m4a": 253895,
+   "sec": 30.74,
+   "src": "rain/rain-on-window.mp3",
+   "webm": 303508
+  },
+  "river": {
+   "ch": 2,
+   "gainDb": 8.0,
+   "m4a": 333378,
+   "sec": 40.0,
+   "src": "nature/river.mp3",
+   "webm": 451443
+  },
+  "roomTone": {
+   "ch": 1,
+   "gainDb": 20.0,
+   "m4a": 69896,
+   "sec": 13.19,
+   "src": "things/ceiling-fan.mp3",
+   "webm": 76474
+  },
+  "ship": {
+   "ch": 2,
+   "gainDb": 20.0,
+   "m4a": 329375,
+   "sec": 40.0,
+   "src": "transport/sailboat.mp3",
+   "webm": 380688
+  },
+  "telemetry": {
+   "ch": 1,
+   "gainDb": -1.6,
+   "m4a": 211006,
+   "sec": 40.0,
+   "src": "things/morse-code.mp3",
+   "webm": 236110
+  },
+  "temple": {
+   "ch": 2,
+   "gainDb": -5.6,
+   "m4a": 329728,
+   "sec": 40.0,
+   "src": "places/temple.mp3",
+   "webm": 417592
+  },
+  "train": {
+   "ch": 2,
+   "gainDb": -5.2,
+   "m4a": 198271,
+   "sec": 24.0,
+   "src": "transport/train.mp3",
+   "webm": 210624
+  },
+  "trainIn": {
+   "ch": 2,
+   "gainDb": 7.5,
+   "m4a": 329590,
+   "sec": 40.0,
+   "src": "transport/inside-a-train.mp3",
+   "webm": 357464
+  },
+  "underwater": {
+   "ch": 2,
+   "gainDb": 9.7,
+   "m4a": 331821,
+   "sec": 40.0,
+   "src": "places/underwater.mp3",
+   "webm": 451513
+  },
+  "village": {
+   "ch": 2,
+   "gainDb": 12.0,
+   "m4a": 329790,
+   "sec": 40.0,
+   "src": "places/night-village.mp3",
+   "webm": 368588
+  },
+  "vinyl": {
+   "ch": 2,
+   "gainDb": 20.0,
+   "m4a": 331053,
+   "sec": 40.0,
+   "src": "things/vinyl-effect.mp3",
+   "webm": 462287
+  },
+  "waterfall": {
+   "ch": 2,
+   "gainDb": 1.9,
+   "m4a": 173879,
+   "sec": 21.09,
+   "src": "nature/waterfall.mp3",
+   "webm": 195010
+  },
+  "waves": {
+   "ch": 2,
+   "gainDb": 12.1,
+   "m4a": 330177,
+   "sec": 40.0,
+   "src": "nature/waves.mp3",
+   "webm": 361985
+  },
+  "wind": {
+   "ch": 2,
+   "gainDb": 6.4,
+   "m4a": 329715,
+   "sec": 40.0,
+   "src": "nature/wind.mp3",
+   "webm": 359216
+  },
+  "windHowl": {
+   "ch": 2,
+   "gainDb": 4.0,
+   "m4a": 329727,
+   "sec": 40.0,
+   "src": "nature/howling-wind.mp3",
+   "webm": 286271
+  },
+  "windTrees": {
+   "ch": 2,
+   "gainDb": 3.7,
+   "m4a": 329647,
+   "sec": 40.0,
+   "src": "nature/wind-in-trees.mp3",
+   "webm": 373553
+  }
+ }
+}
